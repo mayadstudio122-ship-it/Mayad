@@ -101,13 +101,12 @@ export default function Navbar() {
     { name: t('about'), href: '/about' },
     { name: t('movies'), href: '/movies' },
     { name: t('artists'), href: '/artists' },
-    { name: 'Gallery', href: '/gallery' },
-    { name: 'Blogs', href: '/blogs' },
-    { name: 'Culture', href: '/culture' },
-    { name: 'Founder', href: '/founder' },
-     { name: 'FAQ', href: '/faq' },
-    { name: 'Contact', href: '/contact' },
-
+    { name: t('gallery'), href: '/gallery' },
+    { name: t('blogs'), href: '/blogs' },
+    { name: t('culture'), href: '/culture' },
+    { name: t('founder'), href: '/founder' },
+    { name: t('faq'), href: '/faq' },
+    { name: t('contact'), href: '/contact' },
   ];
 
   const isJoinActive = pathname === '/register';
@@ -189,15 +188,15 @@ export default function Navbar() {
                 ENG
               </button>
               <button
-                onClick={() => setLanguage('RAJ')}
+                onClick={() => setLanguage('HIN')}
                 className={`rounded-full px-3 py-1 transition-all duration-200 ${
-                  language === 'RAJ'
+                  language === 'HIN'
                     ? 'bg-mayad-gold font-extrabold text-black shadow-glow-gold'
                     : 'text-slate-300 hover:text-white'
                 }`}
-                title="राजस्थानी"
+                title="हिंदी"
               >
-                राजस्थानी
+                हिंदी
               </button>
             </div>
 
@@ -227,11 +226,11 @@ export default function Navbar() {
 
             {/* MOBILE LANGUAGE */}
             <button
-              onClick={() => setLanguage(language === 'ENG' ? 'RAJ' : 'ENG')}
+              onClick={() => setLanguage(language === 'ENG' ? 'HIN' : 'ENG')}
               className="max-w-[52px] truncate whitespace-nowrap rounded-full border border-white/15 bg-white/10 px-2 py-1 text-[10px] font-bold text-mayad-gold transition-all hover:bg-white/20 sm:max-w-none sm:px-2.5 sm:text-xs"
               title="Toggle Language"
             >
-              {language === 'ENG' ? 'ENG' : 'राज'}
+              {language === 'ENG' ? 'ENG' : 'हिंदी'}
             </button>
 
             {/* MOBILE SEARCH */}
@@ -307,14 +306,14 @@ export default function Navbar() {
                     ENG
                   </button>
                   <button
-                    onClick={() => setLanguage('RAJ')}
+                    onClick={() => setLanguage('HIN')}
                     className={`rounded-full px-3 py-1 transition-all ${
-                      language === 'RAJ'
+                      language === 'HIN'
                         ? 'bg-mayad-gold font-extrabold text-black shadow-glow-gold'
                         : 'text-slate-300'
                     }`}
                   >
-                    राजस्थानी
+                    हिंदी
                   </button>
                 </div>
               </div>

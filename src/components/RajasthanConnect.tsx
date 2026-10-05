@@ -3,8 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, MapPin } from "lucide-react";
+import { useApp } from "@/context/AppContext";
 
 export default function RajasthanConnect() {
+  const { language } = useApp();
+  const isHin = language === 'HIN';
+
   return (
     <section className="relative overflow-hidden bg-[#030611] px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
       {/* Background Glow */}
@@ -15,20 +19,20 @@ export default function RajasthanConnect() {
         <div className="relative z-10">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mayad-gold/30 bg-mayad-gold/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-mayad-gold">
             <MapPin size={15} />
-            Explore Rajasthan
+            {isHin ? "राजस्थान को जानें" : "Explore Rajasthan"}
           </div>
 
           <h2 className="text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
-            MAYAD&apos;s{" "}
+            {isHin ? "मायड़ का " : "MAYAD's "}
             <span className="bg-gradient-to-r from-[#F5D77F] via-[#D8B66A] to-[#B38F3F] bg-clip-text text-transparent">
-              Rajasthan Connect
+              {isHin ? "राजस्थान कनेक्ट" : "Rajasthan Connect"}
             </span>
           </h2>
 
           <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            Discover the vibrant culture of Rajasthan. Explore its
-            regional languages, folk art, traditions, music, and
-            the unique cultural identity of every region.
+            {isHin
+              ? "राजस्थान की जीवंत संस्कृति की खोज करें। इसकी क्षेत्रीय भाषाओं, लोक कला, परंपराओं, संगीत और हर क्षेत्र की अनूठी सांस्कृतिक पहचान का अनुभव करें।"
+              : "Discover the vibrant culture of Rajasthan. Explore its regional languages, folk art, traditions, music, and the unique cultural identity of every region."}
           </p>
 
           {/* Explore Button */}
@@ -37,7 +41,7 @@ export default function RajasthanConnect() {
               href="/culture"
               className="group inline-flex items-center gap-2 rounded-full bg-mayad-gold px-7 py-3.5 font-bold text-black transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(216,182,106,0.3)]"
             >
-              Explore More
+              {isHin ? "और जानें" : "Explore More"}
               <ArrowUpRight
                 size={19}
                 className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
@@ -77,11 +81,11 @@ export default function RajasthanConnect() {
             {/* Bottom Text */}
             <div className="absolute bottom-5 left-5 z-20 sm:bottom-7 sm:left-7">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mayad-gold">
-                Explore the Regions
+                {isHin ? "क्षेत्रों की खोज करें" : "Explore the Regions"}
               </p>
 
               <h3 className="mt-1 text-xl font-bold text-white sm:text-2xl">
-                Discover Rajasthan
+                {isHin ? "राजस्थान को पहचानें" : "Discover Rajasthan"}
               </h3>
             </div>
           </div>

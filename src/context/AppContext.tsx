@@ -94,7 +94,7 @@ export function AppProvider({
 
       if (
         savedLang === 'ENG' ||
-        savedLang === 'RAJ'
+        savedLang === 'HIN'
       ) {
         setLanguageState(savedLang);
       }
@@ -115,7 +115,7 @@ export function AppProvider({
   const toggleLanguage = () => {
     const nextLang =
       language === 'ENG'
-        ? 'RAJ'
+        ? 'HIN'
         : 'ENG';
 
     setLanguage(nextLang);

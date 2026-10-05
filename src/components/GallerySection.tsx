@@ -10,7 +10,7 @@ import { GALLERY_PHOTOS } from '@/data/gallery';
 
 export default function GallerySection() {
   const { language } = useApp();
-  const isRaj = language === 'RAJ';
+  const isHin = language === 'HIN';
 
   // Select 4 showcase photos from gallery
   const previewPhotos = GALLERY_PHOTOS.slice(0, 4);
@@ -27,15 +27,15 @@ export default function GallerySection() {
           <div className="text-center sm:text-left">
             <div className="mb-2.5 inline-flex items-center gap-2 rounded-full border border-mayad-gold/30 bg-mayad-gold/10 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-mayad-gold shadow-glow-gold sm:text-xs">
               <Camera className="h-3.5 w-3.5" />
-              <span>{isRaj ? 'मायड़ फोटो गैलरी' : 'MAYAD GALLERY'}</span>
+              <span>{isHin ? 'मायड़ फोटो गैलरी' : 'MAYAD GALLERY'}</span>
             </div>
 
             <h2 className="text-2xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-              {isRaj ? (
+              {isHin ? (
                 <>
-                  देख्यो म्हारी{' '}
+                  हमारी{' '}
                   <span className="bg-gradient-to-r from-mayad-gold via-amber-300 to-yellow-500 bg-clip-text text-transparent">
-                    फोटो गैलरी
+                    फोटो गैलरी देखें
                   </span>
                 </>
               ) : (
@@ -49,8 +49,8 @@ export default function GallerySection() {
             </h2>
 
             <p className="mt-2 max-w-xl text-xs font-medium text-slate-400 sm:text-sm md:text-base">
-              {isRaj
-                ? 'मायड़ रो ख़ास पल, संस्कृति अर इवेंट्स री ख़ास तस्वीरें।'
+              {isHin
+                ? 'मायड़ के खास पल, संस्कृति और कार्यक्रमों की विशेष तस्वीरें।'
                 : 'Explore iconic moments, cultural highlights, and behind-the-scenes from MAYAD.'}
             </p>
           </div>
@@ -60,7 +60,7 @@ export default function GallerySection() {
             href="/gallery"
             className="group hidden items-center gap-2 rounded-full border border-mayad-gold/40 bg-mayad-gold/10 px-6 py-3 text-xs font-black uppercase tracking-wider text-mayad-gold shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-mayad-gold hover:bg-mayad-gold hover:text-black hover:shadow-glow-gold sm:flex sm:text-sm"
           >
-            <span>{isRaj ? 'सगळी फोटो देखो' : 'See More'}</span>
+            <span>{isHin ? 'सभी तस्वीरें देखें' : 'See More'}</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
@@ -68,8 +68,11 @@ export default function GallerySection() {
         {/* 4 Image Grid */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
           {previewPhotos.map((photo, index) => {
-            const title = isRaj ? photo.titleRaj || 'मायड़ फोटो' : photo.title || 'MAYAD Photo';
-            const catLabel = isRaj ? photo.categoryLabelRaj : photo.categoryLabel;
+            const title = isHin ? photo.titleRaj || photo.title || 'मायड़ फोटो' : photo.title || 'MAYAD Photo';
+            let catLabel = isHin ? photo.categoryLabelRaj : photo.categoryLabel;
+            if (isHin && catLabel === 'म्हारी टीम') {
+              catLabel = 'हमारी टीम';
+            }
 
             return (
               <motion.div
@@ -121,7 +124,7 @@ export default function GallerySection() {
                       </h3>
                     )}
                     <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-mayad-gold transition-colors group-hover:text-amber-300">
-                      <span>{isRaj ? 'गैलरी में देखो' : 'View in Gallery'}</span>
+                      <span>{isHin ? 'गैलरी में देखें' : 'View in Gallery'}</span>
                       <ArrowRight className="h-3 w-3" />
                     </p>
                   </div>
@@ -137,7 +140,7 @@ export default function GallerySection() {
             href="/gallery"
             className="group flex w-full max-w-xs items-center justify-center gap-2 rounded-full border border-mayad-gold/50 bg-mayad-gold px-6 py-3.5 text-center text-sm font-black uppercase tracking-wider text-black shadow-glow-gold transition-all duration-300 hover:scale-105"
           >
-            <span>{isRaj ? 'सगळी फोटो देखो' : 'See More'}</span>
+            <span>{isHin ? 'सभी तस्वीरें देखें' : 'See More'}</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>

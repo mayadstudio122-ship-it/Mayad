@@ -8,13 +8,72 @@ import { Film, Globe, Sparkles, Heart, Flame, Smartphone } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
 export default function AboutSection() {
-  const { t } = useApp();
+  const { t, language } = useApp();
+  const isHin = language === 'HIN';
 
   const highlights = [
-    { icon: Film, title: 'Rajasthani Cinema', text: 'Empowering local filmmakers and cinematic creators.' },
-    { icon: Globe, title: 'Global Distribution', text: 'Reaching the Rajasthani diaspora across 50+ countries.' },
-    { icon: Sparkles, title: 'Authentic Language', text: 'Celebrating native Marwari, Mewari & Shekhawati dialects.' },
-    { icon: Heart, title: 'Emerging Talent', text: 'Spotlighting actors, singers, writers & folk artistes.' },
+    {
+      icon: Film,
+      title: isHin ? 'राजस्थानी सिनेमा' : 'Rajasthani Cinema',
+      text: isHin ? 'स्थानीय फिल्म निर्माताओं और सिनेमाई रचनाकारों को सशक्त बनाना।' : 'Empowering local filmmakers and cinematic creators.'
+    },
+    {
+      icon: Globe,
+      title: isHin ? 'वैश्विक वितरण' : 'Global Distribution',
+      text: isHin ? '50+ देशों में फैले राजस्थानी समुदाय तक पहुंचना।' : 'Reaching the Rajasthani diaspora across 50+ countries.'
+    },
+    {
+      icon: Sparkles,
+      title: isHin ? 'प्रामाणिक भाषा' : 'Authentic Language',
+      text: isHin ? 'मूल मारवाड़ी, मेवाड़ी और शेखावाटी बोलियों का जश्न।' : 'Celebrating native Marwari, Mewari & Shekhawati dialects.'
+    },
+    {
+      icon: Heart,
+      title: isHin ? 'उभरती प्रतिभाएं' : 'Emerging Talent',
+      text: isHin ? 'अभिनेताओं, गायकों, लेखकों और लोक कलाकारों को मंच।' : 'Spotlighting actors, singers, writers & folk artistes.'
+    },
+  ];
+
+  const creationPoints = isHin ? [
+    'राजस्थानी सिनेमा को उसकी अपनी डिजिटल पहचान देना',
+    'राजस्थानी भाषा और संस्कृति को बढ़ावा देना और संरक्षित करना',
+    'फिल्म निर्माताओं और कलाकारों के लिए मंच प्रदान करना',
+    'नए अभिनेताओं, लेखकों, निर्देशकों और तकनीशियनों की खोज और विकास करना',
+    'युवा दर्शकों को राजस्थान की भाषा और संस्कृति से जोड़ना',
+    'राजस्थानी कहानियों और सिनेमा को पूरे भारत और अंतरराष्ट्रीय स्तर पर ले जाना',
+    'एक टिकाऊ राजस्थानी मनोरंजन और फिल्म इकोसिस्टम बनाना',
+  ] : [
+    'Give Rajasthani cinema its own digital identity',
+    'Promote and preserve the Rajasthani language and culture',
+    'Provide a platform for filmmakers and artists',
+    'Discover and develop new actors, writers, directors and technicians',
+    'Connect young audiences with Rajasthan’s language and culture',
+    'Take Rajasthani stories and cinema to audiences across India and internationally',
+    'Build a sustainable Rajasthani entertainment and film ecosystem',
+  ];
+
+  const visionPoints = isHin ? [
+    'राजस्थानी फीचर फिल्में',
+    'शॉर्ट फिल्में',
+    'वेब सीरीज',
+    'ओरिजिनल म्यूजिक',
+    'सांस्कृतिक और ऐतिहासिक कहानियां',
+    'नई प्रतिभाओं की खोज',
+    'एक्टिंग वर्कशॉप और ऑडिशन',
+    'फिल्म प्रोडक्शन',
+    'डिजिटल वितरण',
+    'उभरते कलाकारों और तकनीशियनों के लिए अवसर',
+  ] : [
+    'Rajasthani feature films',
+    'Short films',
+    'Web series',
+    'Original music',
+    'Cultural & historical stories',
+    'New talent discovery',
+    'Acting workshops & auditions',
+    'Film production',
+    'Digital distribution',
+    'Opportunities for emerging artists & technicians',
   ];
 
   return (
@@ -67,7 +126,7 @@ export default function AboutSection() {
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-mayad-gold to-mayad-goldHover text-black font-bold text-base rounded-full shadow-glow-gold hover:scale-105 transition-transform"
             >
               <Flame className="w-5 h-5 fill-current" />
-              <span>Discover MAYAD</span>
+              <span>{isHin ? 'मायड़ को जानें' : 'Discover MAYAD'}</span>
             </Link>
           </div>
         </div>
@@ -79,36 +138,29 @@ export default function AboutSection() {
               MAYAD Studios / MAYAD OTT
             </p>
             <h3 className="text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Building a digital ecosystem for Rajasthan
+              {isHin ? 'राजस्थान के लिए डिजिटल इकोसिस्टम का निर्माण' : 'Building a digital ecosystem for Rajasthan'}
             </h3>
             <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">
-              A platform created around Rajasthani cinema, language, culture and emerging creative talent.
+              {isHin
+                ? 'राजस्थानी सिनेमा, भाषा, संस्कृति और उभरती रचनात्मक प्रतिभा के इर्द-गिर्द बनाया गया मंच।'
+                : 'A platform created around Rajasthani cinema, language, culture and emerging creative talent.'}
             </p>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-3xl border border-white/10 bg-[#0D1226]/80 p-6 sm:p-8 backdrop-blur-sm">
               <h4 className="text-2xl font-black text-white">
-                Why MAYAD was created
+                {isHin ? 'मायड़ क्यों बनाया गया' : 'Why MAYAD was created'}
               </h4>
 
               <p className="mt-5 text-sm leading-7 text-slate-400 sm:text-base">
-                Rajasthan has a rich history, language, culture, folk
-                traditions and storytelling heritage. MAYAD was created to
-                provide Rajasthani creators and stories with a dedicated
-                digital identity and professional space.
+                {isHin
+                  ? 'राजस्थान का एक समृद्ध इतिहास, भाषा, संस्कृति, लोक परंपराएं और कहानी कहने की विरासत है। मायड़ को राजस्थानी रचनाकारों और कहानियों को एक समर्पित डिजिटल पहचान और व्यावसायिक मंच प्रदान करने के लिए बनाया गया था।'
+                  : 'Rajasthan has a rich history, language, culture, folk traditions and storytelling heritage. MAYAD was created to provide Rajasthani creators and stories with a dedicated digital identity and professional space.'}
               </p>
 
               <ul className="mt-6 space-y-3">
-                {[
-                  'Give Rajasthani cinema its own digital identity',
-                  'Promote and preserve the Rajasthani language and culture',
-                  'Provide a platform for filmmakers and artists',
-                  'Discover and develop new actors, writers, directors and technicians',
-                  'Connect young audiences with Rajasthan’s language and culture',
-                  'Take Rajasthani stories and cinema to audiences across India and internationally',
-                  'Build a sustainable Rajasthani entertainment and film ecosystem',
-                ].map((item) => (
+                {creationPoints.map((item) => (
                   <li key={item} className="flex gap-3 text-sm leading-6 text-slate-300">
                     <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-mayad-gold" />
                     {item}
@@ -119,27 +171,17 @@ export default function AboutSection() {
 
             <div className="rounded-3xl border border-mayad-gold/20 bg-gradient-to-br from-mayad-gold/10 via-[#0D1226]/60 to-transparent p-6 sm:p-8 backdrop-blur-sm">
               <h4 className="text-2xl font-black text-white">
-                Future vision
+                {isHin ? 'भविष्य का दृष्टिकोण' : 'Future vision'}
               </h4>
 
               <p className="mt-5 text-sm leading-7 text-slate-400 sm:text-base">
-                The long-term vision is to build a complete digital
-                entertainment ecosystem for Rajasthan.
+                {isHin
+                  ? 'दीर्घकालिक दृष्टिकोण राजस्थान के लिए एक संपूर्ण डिजिटल मनोरंजन पारिस्थितिकी तंत्र का निर्माण करना है।'
+                  : 'The long-term vision is to build a complete digital entertainment ecosystem for Rajasthan.'}
               </p>
 
               <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {[
-                  'Rajasthani feature films',
-                  'Short films',
-                  'Web series',
-                  'Original music',
-                  'Cultural & historical stories',
-                  'New talent discovery',
-                  'Acting workshops & auditions',
-                  'Film production',
-                  'Digital distribution',
-                  'Opportunities for emerging artists & technicians',
-                ].map((item) => (
+                {visionPoints.map((item) => (
                   <div
                     key={item}
                     className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-slate-300"
@@ -163,14 +205,14 @@ export default function AboutSection() {
                 7,000+
               </span>
               <span className="pb-2 text-sm text-slate-400">
-                current internal download milestone
+                {isHin ? 'वर्तमान आंतरिक डाउनलोड मील का पत्थर' : 'current internal download milestone'}
               </span>
             </div>
 
             <p className="mt-5 text-sm leading-7 text-slate-400 sm:text-base max-w-3xl">
-              MAYAD is available on Android and iOS. The public Google Play
-              listing may display a different rounded download counter;
-              7,000+ is presented here as the current internal milestone.
+              {isHin
+                ? 'MAYAD एंड्रॉइड और iOS दोनों पर उपलब्ध है। सार्वजनिक गूगल प्ले लिस्टिंग एक अलग राउंडेड डाउनलोड काउंटर दिखा सकती है; 7,000+ को यहां वर्तमान आंतरिक मील के पत्थर के रूप में प्रस्तुत किया गया है।'
+                : 'MAYAD is available on Android and iOS. The public Google Play listing may display a different rounded download counter; 7,000+ is presented here as the current internal milestone.'}
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">

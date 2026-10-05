@@ -88,7 +88,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
     );
   }
 
-  const isRaj = language === 'RAJ';
+  const isRaj = language === 'HIN';
   const title = (isRaj && blog.titleRaj) ? blog.titleRaj : blog.title;
   const category = (isRaj && blog.categoryRaj) ? blog.categoryRaj : blog.category;
   const readTime = (isRaj && blog.readTimeRaj) ? blog.readTimeRaj : blog.readTime;

@@ -15,8 +15,12 @@ import {
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { getStoredFaqs, FAQItem } from '@/data/faqData';
+import { useApp } from '@/context/AppContext';
 
 export default function FAQPage() {
+  const { language } = useApp();
+  const isHin = language === 'HIN';
+
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [openIndex, setOpenIndex] = useState<number | null>(0); // First item open by default
@@ -35,12 +39,16 @@ export default function FAQPage() {
     };
   }, []);
 
-  const filteredFaqs = faqs.filter(
-    (faq) =>
-      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (faq.category && faq.category.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const getQuestion = (faq: FAQItem) => (isHin && faq.questionHin ? faq.questionHin : faq.question);
+  const getAnswer = (faq: FAQItem) => (isHin && faq.answerHin ? faq.answerHin : faq.answer);
+
+  const filteredFaqs = faqs.filter((faq) => {
+    const q = getQuestion(faq).toLowerCase();
+    const a = getAnswer(faq).toLowerCase();
+    const c = (faq.category || '').toLowerCase();
+    const query = searchQuery.toLowerCase();
+    return q.includes(query) || a.includes(query) || c.includes(query);
+  });
 
   const toggleFaq = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -57,15 +65,20 @@ export default function FAQPage() {
           
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-mayad-gold/30 bg-mayad-gold/10 text-mayad-gold text-xs font-bold uppercase tracking-[0.25em] mb-4">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Help Center</span>
+            <span>{isHin ? 'सहायता केंद्र' : 'Help Center'}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight mb-4">
-            Frequently Asked <span className="bg-gradient-to-r from-[#F5D77F] via-[#D8B66A] to-[#B38F3F] bg-clip-text text-transparent">Questions</span>
+            {isHin ? 'अक्सर पूछे जाने वाले' : 'Frequently Asked'}{' '}
+            <span className="bg-gradient-to-r from-[#F5D77F] via-[#D8B66A] to-[#B38F3F] bg-clip-text text-transparent">
+              {isHin ? 'प्रश्न (FAQ)' : 'Questions'}
+            </span>
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Have questions about MAYAD? Find instant answers to commonly asked questions about our media platform, services, and opportunities below.
+            {isHin
+              ? 'मायड़ के बारे में कोई प्रश्न है? हमारे मीडिया प्लेटफॉर्म, सेवाओं और अवसरों के बारे में अक्सर पूछे जाने वाले प्रश्नों के उत्तर यहाँ पाएं।'
+              : 'Have questions about MAYAD? Find instant answers to commonly asked questions about our media platform, services, and opportunities below.'}
           </p>
 
           {/* Search Box */}
@@ -73,7 +86,7 @@ export default function FAQPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
               type="text"
-              placeholder="Search questions (e.g. services, contact, careers)..."
+              placeholder={isHin ? 'प्रश्न खोजें (उदा. सेवाएँ, संपर्क, करियर)...' : 'Search questions (e.g. services, contact, careers)...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-[#0D1326] border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-mayad-gold/60 focus:ring-1 focus:ring-mayad-gold/60 transition-all shadow-xl"
@@ -86,14 +99,20 @@ export default function FAQPage() {
           {filteredFaqs.length === 0 ? (
             <div className="text-center py-16 bg-[#0D1326]/60 rounded-3xl border border-white/10 p-8">
               <HelpCircle className="w-12 h-12 text-slate-500 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-white">No questions found</h3>
+              <h3 className="text-lg font-bold text-white">
+                {isHin ? 'कोई प्रश्न नहीं मिला' : 'No questions found'}
+              </h3>
               <p className="text-sm text-slate-400 mt-1">
-                Try searching with different keywords or reach out to our team directly.
+                {isHin
+                  ? 'विभिन्न शब्दों के साथ खोजने का प्रयास करें या सीधे हमारी टीम से संपर्क करें।'
+                  : 'Try searching with different keywords or reach out to our team directly.'}
               </p>
             </div>
           ) : (
             filteredFaqs.map((faq, index) => {
               const isOpen = openIndex === index;
+              const qText = getQuestion(faq);
+              const aText = getAnswer(faq);
               return (
                 <motion.div
                   key={faq.id || index}
@@ -120,7 +139,7 @@ export default function FAQPage() {
                       </div>
                       <div>
                         <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-mayad-gold transition-colors">
-                          {faq.question}
+                          {qText}
                         </h3>
                         {faq.category && (
                           <span className="text-[11px] font-semibold text-mayad-gold/80 uppercase tracking-wider">
@@ -146,7 +165,7 @@ export default function FAQPage() {
                         transition={{ duration: 0.3 }}
                       >
                         <div className="px-6 pb-6 pt-2 text-slate-300 text-sm sm:text-base leading-relaxed border-t border-white/5">
-                          {faq.answer}
+                          {aText}
                         </div>
                       </motion.div>
                     )}
@@ -164,16 +183,20 @@ export default function FAQPage() {
               <div className="w-12 h-12 rounded-2xl bg-mayad-gold/15 border border-mayad-gold/30 flex items-center justify-center text-mayad-gold mb-4">
                 <MessageSquare className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-black text-white">Have More Questions?</h3>
+              <h3 className="text-xl font-black text-white">
+                {isHin ? 'और प्रश्न हैं?' : 'Have More Questions?'}
+              </h3>
               <p className="mt-2 text-sm text-slate-400 leading-relaxed">
-                Need more info or want to collaborate with MAYAD? Send us a message via our Contact Us page.
+                {isHin
+                  ? 'अधिक जानकारी चाहिए या मायड़ के साथ जुड़ना चाहते हैं? हमारे संपर्क करें (Contact Us) पृष्ठ के माध्यम से संदेश भेजें।'
+                  : 'Need more info or want to collaborate with MAYAD? Send us a message via our Contact Us page.'}
               </p>
             </div>
             <Link
               href="/contact"
               className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-mayad-gold hover:text-white transition-colors group"
             >
-              <span>Contact MAYAD Team</span>
+              <span>{isHin ? 'मायड़ टीम से संपर्क करें' : 'Contact MAYAD Team'}</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -183,16 +206,20 @@ export default function FAQPage() {
               <div className="w-12 h-12 rounded-2xl bg-mayad-gold/20 border border-mayad-gold/40 flex items-center justify-center text-mayad-gold mb-4">
                 <UserPlus className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-black text-white">Career Opportunities</h3>
+              <h3 className="text-xl font-black text-white">
+                {isHin ? 'करियर के अवसर' : 'Career Opportunities'}
+              </h3>
               <p className="mt-2 text-sm text-slate-400 leading-relaxed">
-                Join our growing network of artists, creators, and professionals in Rajasthan media industry.
+                {isHin
+                  ? 'राजस्थान मीडिया उद्योग में कलाकारों, रचनाकारों और पेशेवरों के हमारे बढ़ते नेटवर्क से जुड़ें।'
+                  : 'Join our growing network of artists, creators, and professionals in Rajasthan media industry.'}
               </p>
             </div>
             <Link
               href="/register"
               className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-mayad-gold hover:text-white transition-colors group"
             >
-              <span>Join MAYAD Network</span>
+              <span>{isHin ? 'मायड़ नेटवर्क से जुड़ें' : 'Join MAYAD Network'}</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>

@@ -25,6 +25,7 @@ import {
   FileCheck,
 } from 'lucide-react';
 import { getApiBaseUrl } from '@/utils/config';
+import { useApp } from '@/context/AppContext';
 
 // ============================================================
 // CONSTANTS
@@ -165,6 +166,9 @@ function Collapsible({ children }: { children: React.ReactNode }) {
 // PAGE
 // ============================================================
 export default function RegisterPage() {
+  const { language } = useApp();
+  const isHin = language === 'HIN';
+
   // Personal
   const [fullName, setFullName] = useState('');
   const [age, setAge] = useState('');
@@ -212,6 +216,19 @@ export default function RegisterPage() {
 
   const isExperienced = experienceLevel === 'Experienced';
 
+  // Role translation mapping helper for display
+  const ROLE_LABELS_HIN: Record<string, string> = {
+    'Director': 'निर्देशक (Director)',
+    'Actor': 'अभिनेता (Actor)',
+    'Actress': 'अभिनेत्री (Actress)',
+    'Writer': 'लेखक (Writer)',
+    'Cinematographer': 'सिनेमैटोग्राफर (Cinematographer)',
+    'Editor': 'संपादक (Editor)',
+    'Singer': 'गायक (Singer)',
+    'Dancer': 'नर्तक (Dancer)',
+    'Anchor': 'एंकर (Anchor)',
+  };
+
   // Hide About section when ONLY Actor / Actress / Cinematographer / Editor are selected
   const showAboutSection = useMemo(() => {
     if (interestedRoles.length === 0) return true;
@@ -258,12 +275,18 @@ export default function RegisterPage() {
     if (!file) return;
 
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-      setErrors((prev) => ({ ...prev, profilePhoto: 'Only JPG, PNG and WEBP images are supported' }));
+      setErrors((prev) => ({
+        ...prev,
+        profilePhoto: isHin ? 'केवल JPG, PNG और WEBP फ़ोटो समर्थित हैं' : 'Only JPG, PNG and WEBP images are supported'
+      }));
       e.target.value = '';
       return;
     }
     if (file.size > MAX_PHOTO_SIZE) {
-      setErrors((prev) => ({ ...prev, profilePhoto: 'Image size must be under 5MB' }));
+      setErrors((prev) => ({
+        ...prev,
+        profilePhoto: isHin ? 'फ़ोटो का आकार 5MB से कम होना चाहिए' : 'Image size must be under 5MB'
+      }));
       e.target.value = '';
       return;
     }
@@ -281,12 +304,18 @@ export default function RegisterPage() {
     if (!file) return;
 
     if (file.type !== 'application/pdf') {
-      setErrors((prev) => ({ ...prev, synopsisPdf: 'Please upload a valid PDF document' }));
+      setErrors((prev) => ({
+        ...prev,
+        synopsisPdf: isHin ? 'कृपया एक वैध पीडीएफ दस्तावेज़ अपलोड करें' : 'Please upload a valid PDF document'
+      }));
       e.target.value = '';
       return;
     }
     if (file.size > MAX_PDF_SIZE) {
-      setErrors((prev) => ({ ...prev, synopsisPdf: 'PDF size must be under 15MB' }));
+      setErrors((prev) => ({
+        ...prev,
+        synopsisPdf: isHin ? 'पीडीएफ का आकार 15MB से कम होना चाहिए' : 'PDF size must be under 15MB'
+      }));
       e.target.value = '';
       return;
     }
@@ -321,46 +350,62 @@ export default function RegisterPage() {
   const validateForm = () => {
     const e: Record<string, string> = {};
 
-    if (!fullName.trim()) e.fullName = 'Full name is required';
+    if (!fullName.trim()) {
+      e.fullName = isHin ? 'पूरा नाम आवश्यक है' : 'Full name is required';
+    }
 
     const numAge = parseInt(age, 10);
     if (!age || isNaN(numAge) || numAge < 1 || numAge > 120) {
-      e.age = 'Please enter a valid age (1-120)';
+      e.age = isHin ? 'कृपया एक वैध आयु (1-120) दर्ज करें' : 'Please enter a valid age (1-120)';
     }
 
-    if (!profilePhotoFile) e.profilePhoto = 'Profile photo is required';
+    if (!profilePhotoFile) {
+      e.profilePhoto = isHin ? 'प्रोफ़ाइल फ़ोटो आवश्यक है' : 'Profile photo is required';
+    }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      e.email = 'A valid email address is required';
+      e.email = isHin ? 'एक वैध ईमेल पता आवश्यक है' : 'A valid email address is required';
     }
 
     if (interestedRoles.length === 0) {
-      e.interestedRoles = 'Select at least one role you are interested in';
+      e.interestedRoles = isHin ? 'कम से कम एक भूमिका चुनें जिसमें आपकी रुचि है' : 'Select at least one role you are interested in';
     }
 
     if (isExperienced) {
       if (!isValidUrl(introductoryVideoUrl)) {
-        e.introductoryVideoUrl = 'Enter a valid link starting with http:// or https://';
+        e.introductoryVideoUrl = isHin ? 'http:// या https:// से शुरू होने वाला एक वैध लिंक दर्ज करें' : 'Enter a valid link starting with http:// or https://';
       }
       if (projectVideoUrls.some((u) => !isValidUrl(u))) {
-        e.projectVideoUrls = 'One or more project links are not valid (use http:// or https://)';
+        e.projectVideoUrls = isHin ? 'एक या अधिक प्रोजेक्ट लिंक वैध नहीं हैं (http:// या https:// का उपयोग करें)' : 'One or more project links are not valid (use http:// or https://)';
       }
     }
 
     if (!isValidPhone(whatsAppNumber.trim())) {
-      e.whatsAppNumber = 'Enter a valid WhatsApp number (10-15 digits)';
+      e.whatsAppNumber = isHin ? 'एक वैध व्हाट्सएप नंबर (10-15 अंक) दर्ज करें' : 'Enter a valid WhatsApp number (10-15 digits)';
     }
     if (!isValidPhone(callingNumber.trim())) {
-      e.callingNumber = 'Enter a valid calling number (10-15 digits)';
+      e.callingNumber = isHin ? 'एक वैध कॉलिंग नंबर (10-15 अंक) दर्ज करें' : 'Enter a valid calling number (10-15 digits)';
     }
 
-    if (!fullAddress.trim()) e.fullAddress = 'Full address is required';
-    if (!city.trim()) e.city = 'City is required';
-    if (!state.trim()) e.state = 'State is required';
-    if (!country.trim()) e.country = 'Country is required';
+    if (!fullAddress.trim()) {
+      e.fullAddress = isHin ? 'पूरा पता आवश्यक है' : 'Full address is required';
+    }
+    if (!city.trim()) {
+      e.city = isHin ? 'शहर का नाम आवश्यक है' : 'City is required';
+    }
+    if (!state.trim()) {
+      e.state = isHin ? 'राज्य का नाम आवश्यक है' : 'State is required';
+    }
+    if (!country.trim()) {
+      e.country = isHin ? 'देश का नाम आवश्यक है' : 'Country is required';
+    }
 
-    if (!isValidUrl(socialLink1)) e.socialLink1 = 'Enter a valid link starting with http:// or https://';
-    if (!isValidUrl(socialLink2)) e.socialLink2 = 'Enter a valid link starting with http:// or https://';
+    if (!isValidUrl(socialLink1)) {
+      e.socialLink1 = isHin ? 'http:// या https:// से शुरू होने वाला एक वैध लिंक दर्ज करें' : 'Enter a valid link starting with http:// or https://';
+    }
+    if (!isValidUrl(socialLink2)) {
+      e.socialLink2 = isHin ? 'http:// या https:// से शुरू होने वाला एक वैध लिंक दर्ज करें' : 'Enter a valid link starting with http:// or https://';
+    }
 
     setErrors(e);
     return e;
@@ -410,7 +455,7 @@ export default function RegisterPage() {
     const firstKey = FIELD_ORDER.find((key) => found[key]);
 
     if (firstKey) {
-      setFormError('Please fix the highlighted fields before submitting.');
+      setFormError(isHin ? 'कृपया फॉर्म जमा करने से पहले हाईलाइट किए गए फ़ील्ड को ठीक करें।' : 'Please fix the highlighted fields before submitting.');
       document
         .getElementById(`field-${firstKey}`)
         ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -464,7 +509,7 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data?.message || 'Registration failed. Please try again.');
+        throw new Error(data?.message || (isHin ? 'पंजीकरण विफल रहा। कृपया पुन: प्रयास करें।' : 'Registration failed. Please try again.'));
       }
 
       setSubmittedData(data.application);
@@ -472,7 +517,7 @@ export default function RegisterPage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: any) {
       console.error('Talent Registration Error:', err);
-      setFormError(err?.message || 'Failed to submit registration. Please check your connection.');
+      setFormError(err?.message || (isHin ? 'पंजीकरण जमा करने में विफल। कृपया अपना इंटरनेट कनेक्शन जांचें।' : 'Failed to submit registration. Please check your connection.'));
     } finally {
       setSubmitting(false);
     }
@@ -490,33 +535,32 @@ export default function RegisterPage() {
 
       <div className="max-w-4xl mx-auto">
         {/* HERO */}
-       {/* HERO */}
-<motion.div
-  initial={{ opacity: 0, y: -20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
-  className="text-center mb-12"
->
-  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 text-[#F5D77A] text-xs font-bold mb-6">
-    <Sparkles className="w-3.5 h-3.5" />
-    <span>MAYAD Production House · Talent Network</span>
-  </div>
-<div className="flex flex-col items-center justify-center px-4">
-  <div className="flex justify-center">
-    <Image
-      src="/mayad22.png"
-      alt="MAYAD Logo"
-      width={840}
-      height={360}
-      priority
-      className="h-auto w-full max-w-[240px] object-contain sm:max-w-[280px]"
-    />
-  </div>
-  <p className="mt-1 max-w-2xl text-center text-base leading-relaxed text-slate-300 sm:text-lg">
-    थांरो हुनर, मायड़ रो मान। आओ, म्हारे संग आपणी पहचान बनावो।
-  </p>
-</div>
-</motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 text-[#F5D77A] text-xs font-bold mb-6">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{isHin ? 'MAYAD प्रोडक्शन हाउस · टैलेंट नेटवर्क' : 'MAYAD Production House · Talent Network'}</span>
+          </div>
+          <div className="flex flex-col items-center justify-center px-4">
+            <div className="flex justify-center">
+              <Image
+                src="/mayad22.png"
+                alt="MAYAD Logo"
+                width={840}
+                height={360}
+                priority
+                className="h-auto w-full max-w-[240px] object-contain sm:max-w-[280px]"
+              />
+            </div>
+            <p className="mt-1 max-w-2xl text-center text-base leading-relaxed text-slate-300 sm:text-lg">
+              थांरो हुनर, मायड़ रो मान। आओ, म्हारे संग आपणी पहचान बनावो।
+            </p>
+          </div>
+        </motion.div>
 
         {/* SUCCESS */}
         <AnimatePresence>
@@ -534,38 +578,40 @@ export default function RegisterPage() {
               </div>
 
               <h2 className="relative text-2xl sm:text-3xl font-extrabold text-white mb-3">
-                Registration submitted successfully!
+                {isHin ? 'पंजीकरण सफलतापूर्वक जमा किया गया!' : 'Registration submitted successfully!'}
               </h2>
 
               <p className="relative text-slate-300 text-base max-w-xl mx-auto mb-8 leading-relaxed">
-                Thank you,{' '}
-                <strong className="text-[#F5D77A]">{submittedData?.fullName || fullName}</strong>! Your
-                talent registration has been received by our casting and production team.
+                {isHin ? 'धन्यवाद, ' : 'Thank you, '}
+                <strong className="text-[#F5D77A]">{submittedData?.fullName || fullName}</strong>!{' '}
+                {isHin
+                  ? 'आपका टैलेंट रजिस्ट्रेशन हमारी कास्टिंग और प्रोडक्शन टीम को प्राप्त हो गया है।'
+                  : 'Your talent registration has been received by our casting and production team.'}
               </p>
 
               <div className="relative max-w-md mx-auto rounded-2xl bg-black/60 border border-white/10 p-5 mb-8 text-left space-y-3 text-sm">
                 <div className="flex justify-between gap-4 border-b border-white/10 pb-2">
-                  <span className="text-slate-400">Application ID</span>
+                  <span className="text-slate-400">{isHin ? 'आवेदन आईडी' : 'Application ID'}</span>
                   <span className="font-mono text-[#F5D77A] font-bold break-all text-right">
                     {submittedData?.id || 'SUBMITTED'}
                   </span>
                 </div>
                 <div className="flex justify-between gap-4 border-b border-white/10 pb-2">
-                  <span className="text-slate-400">Interested roles</span>
+                  <span className="text-slate-400">{isHin ? 'इच्छुक भूमिकाएं' : 'Interested roles'}</span>
                   <span className="text-white font-semibold text-right">
                     {submittedData?.interestedRoles?.join(', ') || interestedRoles.join(', ')}
                   </span>
                 </div>
                 <div className="flex justify-between gap-4 border-b border-white/10 pb-2">
-                  <span className="text-slate-400">Experience level</span>
+                  <span className="text-slate-400">{isHin ? 'अनुभव का स्तर' : 'Experience level'}</span>
                   <span className="text-white font-semibold">
                     {submittedData?.experienceLevel || experienceLevel}
                   </span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <span className="text-slate-400">Status</span>
+                  <span className="text-slate-400">{isHin ? 'स्थिति' : 'Status'}</span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">
-                    Pending admin review
+                    {isHin ? 'एडमिन समीक्षा के लिए लंबित' : 'Pending admin review'}
                   </span>
                 </div>
               </div>
@@ -575,14 +621,14 @@ export default function RegisterPage() {
                   href="/movies"
                   className="w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F5D77A] text-black font-bold text-sm shadow-lg hover:scale-105 transition-all text-center"
                 >
-                  Explore MAYAD movies
+                  {isHin ? 'MAYAD फिल्में देखें' : 'Explore MAYAD movies'}
                 </Link>
                 <button
                   type="button"
                   onClick={resetForm}
                   className="w-full sm:w-auto px-6 py-3 rounded-full border border-white/20 bg-white/5 text-slate-200 font-bold text-sm hover:bg-white/10 transition-all text-center"
                 >
-                  Submit another profile
+                  {isHin ? 'एक अन्य प्रोफ़ाइल जमा करें' : 'Submit another profile'}
                 </button>
               </div>
             </motion.div>
@@ -607,7 +653,7 @@ export default function RegisterPage() {
               >
                 <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold block text-red-300 mb-0.5">Submission error</span>
+                  <span className="font-bold block text-red-300 mb-0.5">{isHin ? 'त्रुटि' : 'Submission error'}</span>
                   <span>{formError}</span>
                 </div>
               </div>
@@ -616,24 +662,26 @@ export default function RegisterPage() {
             {/* 1. PROFESSIONAL INFORMATION */}
             <SectionCard
               icon={Film}
-              title="1. Professional Information"
-              subtitle="Select your creative discipline and experience level."
+              title={isHin ? '1. व्यावसायिक जानकारी' : '1. Professional Information'}
+              subtitle={isHin ? 'अपना रचनात्मक क्षेत्र और अनुभव स्तर चुनें।' : 'Select your creative discipline and experience level.'}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Field id="preferredLanguage" label="Preferred language">
+                <Field id="preferredLanguage" label={isHin ? 'पसंदीदा भाषा' : 'Preferred language'}>
                   <select
                     id="preferredLanguage"
                     value={preferredLanguage}
                     onChange={bind(setPreferredLanguage)}
                     className={inputCls()}
                   >
-                    <option value="Both" className="bg-[#090d1f]">Both (English & Hindi)</option>
-                    <option value="Hindi" className="bg-[#090d1f]">Hindi</option>
-                    <option value="English" className="bg-[#090d1f]">English</option>
+                    <option value="Both" className="bg-[#090d1f]">
+                      {isHin ? 'दोनों (हिंदी और अंग्रेजी)' : 'Both (English & Hindi)'}
+                    </option>
+                    <option value="Hindi" className="bg-[#090d1f]">{isHin ? 'हिंदी' : 'Hindi'}</option>
+                    <option value="English" className="bg-[#090d1f]">{isHin ? 'अंग्रेजी' : 'English'}</option>
                   </select>
                 </Field>
 
-                <Field id="experienceLevel" label="Experience level">
+                <Field id="experienceLevel" label={isHin ? 'अनुभव का स्तर' : 'Experience level'}>
                   <div className="grid grid-cols-2 gap-3">
                     {['Newcomer', 'Experienced'].map((lvl) => (
                       <button
@@ -647,7 +695,7 @@ export default function RegisterPage() {
                             : 'bg-black/60 text-slate-300 border-white/15 hover:border-white/30'
                         }`}
                       >
-                        {lvl}
+                        {isHin ? (lvl === 'Newcomer' ? 'नवागंतुक (नया)' : 'अनुभवी') : lvl}
                       </button>
                     ))}
                   </div>
@@ -656,7 +704,7 @@ export default function RegisterPage() {
 
               <Field
                 id="interestedRoles"
-                label="Interested in (select one or more roles)"
+                label={isHin ? 'आप क्या बनना चाहते हैं? (एक या अधिक भूमिकाएं चुनें)' : 'Interested in (select one or more roles)'}
                 required
                 error={errors.interestedRoles}
               >
@@ -676,7 +724,7 @@ export default function RegisterPage() {
                         }`}
                       >
                         {selected && <CheckCircle className="w-3.5 h-3.5 text-black" />}
-                        <span>{role}</span>
+                        <span>{isHin ? ROLE_LABELS_HIN[role] || role : role}</span>
                       </button>
                     );
                   })}
@@ -687,23 +735,23 @@ export default function RegisterPage() {
             {/* 2. PERSONAL INFORMATION */}
             <SectionCard
               icon={User}
-              title="2. Personal Information"
-              subtitle="Enter your details and upload your profile photo."
+              title={isHin ? '2. अपने बारे में बताइए' : '2. Personal Information'}
+              subtitle={isHin ? 'विवरण दर्ज करें और अपनी प्रोफ़ाइल फ़ोटो अपलोड करें।' : 'Enter your details and upload your profile photo.'}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Field id="fullName" label="Full name" required error={errors.fullName}>
+                <Field id="fullName" label={isHin ? 'पूरा नाम' : 'Full name'} required error={errors.fullName}>
                   <input
                     id="fullName"
                     type="text"
                     value={fullName}
                     onChange={bind(setFullName, 'fullName')}
-                    placeholder="Enter your full name"
+                    placeholder={isHin ? 'अपना पूरा नाम दर्ज करें' : 'Enter your full name'}
                     autoComplete="name"
                     className={inputCls(errors.fullName)}
                   />
                 </Field>
 
-                <Field id="age" label="Age (years)" required error={errors.age}>
+                <Field id="age" label={isHin ? 'आयु (वर्ष)' : 'Age (years)'} required error={errors.age}>
                   <input
                     id="age"
                     type="number"
@@ -711,22 +759,22 @@ export default function RegisterPage() {
                     max="120"
                     value={age}
                     onChange={bind(setAge, 'age')}
-                    placeholder="e.g. 24"
+                    placeholder={isHin ? 'जैसे: 24' : 'e.g. 24'}
                     className={inputCls(errors.age)}
                   />
                 </Field>
 
-                <Field id="gender" label="Gender">
+                <Field id="gender" label={isHin ? 'लिंग' : 'Gender'}>
                   <select id="gender" value={gender} onChange={bind(setGender)} className={inputCls()}>
-                    <option value="Male" className="bg-[#090d1f]">Male</option>
-                    <option value="Female" className="bg-[#090d1f]">Female</option>
-                    <option value="Non-Binary" className="bg-[#090d1f]">Non-Binary</option>
-                    <option value="Prefer not to say" className="bg-[#090d1f]">Prefer not to say</option>
-                    <option value="Other" className="bg-[#090d1f]">Other</option>
+                    <option value="Male" className="bg-[#090d1f]">{isHin ? 'पुरुष' : 'Male'}</option>
+                    <option value="Female" className="bg-[#090d1f]">{isHin ? 'महिला' : 'Female'}</option>
+                    <option value="Non-Binary" className="bg-[#090d1f]">{isHin ? 'नॉन-बाइनरी' : 'Non-Binary'}</option>
+                    <option value="Prefer not to say" className="bg-[#090d1f]">{isHin ? 'बताना नहीं चाहते' : 'Prefer not to say'}</option>
+                    <option value="Other" className="bg-[#090d1f]">{isHin ? 'अन्य' : 'Other'}</option>
                   </select>
                 </Field>
 
-                <Field id="email" label="Email address" required error={errors.email}>
+                <Field id="email" label={isHin ? 'ईमेल पता' : 'Email address'} required error={errors.email}>
                   <input
                     id="email"
                     type="email"
@@ -742,7 +790,7 @@ export default function RegisterPage() {
               {/* PROFILE PHOTO */}
               <Field
                 id="profilePhotoInput"
-                label="Profile photo (JPG, PNG, WEBP)"
+                label={isHin ? 'प्रोफ़ाइल फ़ोटो (JPG, PNG, WEBP)' : 'Profile photo (JPG, PNG, WEBP)'}
                 required
                 error={errors.profilePhoto}
               >
@@ -762,8 +810,8 @@ export default function RegisterPage() {
                           type="button"
                           onClick={removePhoto}
                           className="absolute top-1 right-1 p-1 rounded-full bg-red-600/90 text-white hover:bg-red-500 transition-all sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
-                          title="Remove photo"
-                          aria-label="Remove photo"
+                          title={isHin ? 'फ़ोटो हटाएं' : 'Remove photo'}
+                          aria-label={isHin ? 'फ़ोटो हटाएं' : 'Remove photo'}
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -771,7 +819,9 @@ export default function RegisterPage() {
                     ) : (
                       <div className="text-center p-2">
                         <Camera className="w-8 h-8 text-slate-500 mx-auto mb-1" />
-                        <span className="text-[10px] text-slate-400 font-semibold">No image</span>
+                        <span className="text-[10px] text-slate-400 font-semibold">
+                          {isHin ? 'कोई फ़ोटो नहीं' : 'No image'}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -782,7 +832,11 @@ export default function RegisterPage() {
                       className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#F5D77A] text-black font-bold text-xs cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-md"
                     >
                       <Upload className="w-4 h-4" />
-                      <span>{profilePhotoPreview ? 'Change photo' : 'Upload profile photo'}</span>
+                      <span>
+                        {isHin
+                          ? (profilePhotoPreview ? 'फ़ोटो बदलें' : 'प्रोफ़ाइल फ़ोटो अपलोड करें')
+                          : (profilePhotoPreview ? 'Change photo' : 'Upload profile photo')}
+                      </span>
                     </label>
                     <input
                       ref={photoInputRef}
@@ -792,7 +846,11 @@ export default function RegisterPage() {
                       onChange={handlePhotoChange}
                       className="sr-only"
                     />
-                    <p className="text-xs text-slate-400">High-resolution portrait photo (max 5MB).</p>
+                    <p className="text-xs text-slate-400">
+                      {isHin
+                        ? 'उच्च गुणवत्ता वाली पोर्ट्रेट फ़ोटो (अधिकतम 5MB)।'
+                        : 'High-resolution portrait photo (max 5MB).'}
+                    </p>
                   </div>
                 </div>
               </Field>
@@ -804,29 +862,29 @@ export default function RegisterPage() {
                 <Collapsible key="experience">
                   <SectionCard
                     icon={Video}
-                    title="3. Experience & Project Links"
-                    subtitle="Share your portfolio, showreels and previous work."
+                    title={isHin ? '3. अनुभव एवं प्रोजेक्ट लिंक' : '3. Experience & Project Links'}
+                    subtitle={isHin ? 'अपना पोर्टफोलियो, शोरील्स और पिछला काम साझा करें।' : 'Share your portfolio, showreels and previous work.'}
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <Field id="yearsOfExperience" label="Years of experience">
+                      <Field id="yearsOfExperience" label={isHin ? 'अनुभव के वर्ष' : 'Years of experience'}>
                         <select
                           id="yearsOfExperience"
                           value={yearsOfExperience}
                           onChange={bind(setYearsOfExperience)}
                           className={inputCls()}
                         >
-                          <option value="0" className="bg-[#090d1f]">Fresher / 0 years</option>
-                          <option value="1" className="bg-[#090d1f]">1 year</option>
-                          <option value="2" className="bg-[#090d1f]">2 years</option>
-                          <option value="3-5" className="bg-[#090d1f]">3 to 5 years</option>
-                          <option value="5-10" className="bg-[#090d1f]">5 to 10 years</option>
-                          <option value="10+" className="bg-[#090d1f]">10+ years</option>
+                          <option value="0" className="bg-[#090d1f]">{isHin ? 'नवागंतुक / 0 वर्ष' : 'Fresher / 0 years'}</option>
+                          <option value="1" className="bg-[#090d1f]">{isHin ? '1 वर्ष' : '1 year'}</option>
+                          <option value="2" className="bg-[#090d1f]">{isHin ? '2 वर्ष' : '2 years'}</option>
+                          <option value="3-5" className="bg-[#090d1f]">{isHin ? '3 से 5 वर्ष' : '3 to 5 years'}</option>
+                          <option value="5-10" className="bg-[#090d1f]">{isHin ? '5 से 10 वर्ष' : '5 to 10 years'}</option>
+                          <option value="10+" className="bg-[#090d1f]">{isHin ? '10+ वर्ष' : '10+ years'}</option>
                         </select>
                       </Field>
 
                       <Field
                         id="introductoryVideoUrl"
-                        label="Introductory video link (YouTube / Vimeo / Drive)"
+                        label={isHin ? 'परिचयात्मक वीडियो लिंक (यूट्यूब / वीमियो / ड्राइव)' : 'Introductory video link (YouTube / Vimeo / Drive)'}
                         error={errors.introductoryVideoUrl}
                       >
                         <input
@@ -840,20 +898,24 @@ export default function RegisterPage() {
                       </Field>
                     </div>
 
-                    <Field id="previousProjects" label="Previous projects summary">
+                    <Field id="previousProjects" label={isHin ? 'पिछले प्रोजेक्ट्स का विवरण' : 'Previous projects summary'}>
                       <textarea
                         id="previousProjects"
                         rows={3}
                         value={previousProjects}
                         onChange={bind(setPreviousProjects)}
-                        placeholder="Mention short films, movies, series, ads or music videos you have worked on..."
+                        placeholder={
+                          isHin
+                            ? 'शॉर्ट फिल्मों, फिल्मों, सीरीज, विज्ञापनों या म्यूजिक वीडियो का उल्लेख करें जिन पर आपने काम किया है...'
+                            : 'Mention short films, movies, series, ads or music videos you have worked on...'
+                        }
                         className={`${inputCls()} resize-none`}
                       />
                     </Field>
 
                     <Field
                       id="projectVideoUrls"
-                      label={`Project video links (up to ${MAX_PROJECT_LINKS})`}
+                      label={isHin ? `प्रोजेक्ट वीडियो लिंक (${MAX_PROJECT_LINKS} तक)` : `Project video links (up to ${MAX_PROJECT_LINKS})`}
                       error={errors.projectVideoUrls}
                     >
                       <div className="space-y-3">
@@ -864,7 +926,7 @@ export default function RegisterPage() {
                               type="url"
                               value={url}
                               onChange={(e) => handleVideoUrlChange(index, e.target.value)}
-                              placeholder={`Project video link #${index + 1}`}
+                              placeholder={isHin ? `प्रोजेक्ट वीडियो लिंक #${index + 1}` : `Project video link #${index + 1}`}
                               aria-label={`Project video link ${index + 1}`}
                               className={`flex-1 ${inputCls(errors.projectVideoUrls)}`}
                             />
@@ -873,7 +935,7 @@ export default function RegisterPage() {
                                 type="button"
                                 onClick={() => handleRemoveVideoUrl(index)}
                                 className="p-3 rounded-xl bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/30 transition-all shrink-0"
-                                title="Remove link"
+                                title={isHin ? 'लिंक हटाएं' : 'Remove link'}
                                 aria-label={`Remove link ${index + 1}`}
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -889,7 +951,7 @@ export default function RegisterPage() {
                             className="inline-flex items-center gap-1 text-xs font-bold text-[#F5D77A] hover:underline"
                           >
                             <Plus className="w-3.5 h-3.5" />
-                            <span>Add another link</span>
+                            <span>{isHin ? 'एक और लिंक जोड़ें' : 'Add another link'}</span>
                           </button>
                         )}
                       </div>
@@ -905,23 +967,27 @@ export default function RegisterPage() {
                 <Collapsible key="about">
                   <SectionCard
                     icon={FileText}
-                    title={`${aboutNo}. Cinematic Profile & Synopsis`}
-                    subtitle="Share your background and skills, or upload a PDF synopsis."
+                    title={isHin ? `${aboutNo}. फिल्मी परिचय एवं कहानी का सार` : `${aboutNo}. Cinematic Profile & Synopsis`}
+                    subtitle={isHin ? 'अपनी पृष्ठभूमि और कौशल साझा करें, या एक पीडीएफ सिनोप्सिस अपलोड करें।' : 'Share your background and skills, or upload a PDF synopsis.'}
                   >
-                    <Field id="aboutYourself" label="About yourself / professional synopsis">
+                    <Field id="aboutYourself" label={isHin ? 'अपने बारे में / व्यावसायिक सिनोप्सिस' : 'About yourself / professional synopsis'}>
                       <textarea
                         id="aboutYourself"
                         rows={4}
                         value={aboutYourself}
                         onChange={bind(setAboutYourself)}
-                        placeholder="Describe your creative vision, directing or writing style, technical expertise, or background..."
+                        placeholder={
+                          isHin
+                            ? 'अपनी रचनात्मक दृष्टि, निर्देशन या लेखन शैली, तकनीकी विशेषज्ञता या पृष्ठभूमि का वर्णन करें...'
+                            : 'Describe your creative vision, directing or writing style, technical expertise, or background...'
+                        }
                         className={`${inputCls()} resize-none`}
                       />
                     </Field>
 
                     <Field
                       id="synopsisPdfInput"
-                      label="PDF synopsis / cinematic portfolio (optional)"
+                      label={isHin ? 'पीडीएफ सिनोप्सिस / पोर्टफोलियो (वैकल्पिक)' : 'PDF synopsis / cinematic portfolio (optional)'}
                       error={errors.synopsisPdf}
                     >
                       <div
@@ -934,9 +1000,15 @@ export default function RegisterPage() {
                           </div>
                           <div className="min-w-0">
                             <span className="block text-sm font-semibold text-white truncate">
-                              {synopsisPdfFile ? synopsisPdfFile.name : 'No PDF selected'}
+                              {synopsisPdfFile
+                                ? synopsisPdfFile.name
+                                : isHin
+                                ? 'कोई पीडीएफ चयनित नहीं है'
+                                : 'No PDF selected'}
                             </span>
-                            <span className="text-xs text-slate-400">PDF documents up to 15MB.</span>
+                            <span className="text-xs text-slate-400">
+                              {isHin ? '15MB तक के पीडीएफ दस्तावेज़।' : 'PDF documents up to 15MB.'}
+                            </span>
                           </div>
                         </div>
 
@@ -946,7 +1018,11 @@ export default function RegisterPage() {
                             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/20 bg-white/5 text-slate-200 font-bold text-xs cursor-pointer hover:bg-white/10 transition-all"
                           >
                             <Upload className="w-4 h-4 text-[#F5D77A]" />
-                            <span>{synopsisPdfFile ? 'Change PDF' : 'Select PDF'}</span>
+                            <span>
+                              {isHin
+                                ? (synopsisPdfFile ? 'पीडीएफ बदलें' : 'पीडीएफ चुनें')
+                                : (synopsisPdfFile ? 'Change PDF' : 'Select PDF')}
+                            </span>
                           </label>
                           {synopsisPdfFile && (
                             <button
@@ -956,8 +1032,8 @@ export default function RegisterPage() {
                                 if (pdfInputRef.current) pdfInputRef.current.value = '';
                               }}
                               className="p-2.5 rounded-xl bg-red-600/20 text-red-400 hover:bg-red-600/40 border border-red-500/30 transition-all"
-                              title="Remove PDF"
-                              aria-label="Remove PDF"
+                              title={isHin ? 'पीडीएफ हटाएं' : 'Remove PDF'}
+                              aria-label={isHin ? 'पीडीएफ हटाएं' : 'Remove PDF'}
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -981,11 +1057,11 @@ export default function RegisterPage() {
             {/* CONTACT */}
             <SectionCard
               icon={Phone}
-              title={`${contactNo}. Contact Information & Address`}
-              subtitle="Direct contact details for production communication."
+              title={isHin ? `${contactNo}. संपर्क जानकारी एवं पता` : `${contactNo}. Contact Information & Address`}
+              subtitle={isHin ? 'कास्टिंग और प्रोडक्शन संचार के लिए सीधे संपर्क विवरण।' : 'Direct contact details for production communication.'}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Field id="whatsAppNumber" label="WhatsApp number" required error={errors.whatsAppNumber}>
+                <Field id="whatsAppNumber" label={isHin ? 'व्हाट्सएप नंबर' : 'WhatsApp number'} required error={errors.whatsAppNumber}>
                   <input
                     id="whatsAppNumber"
                     type="tel"
@@ -998,7 +1074,7 @@ export default function RegisterPage() {
                   />
                 </Field>
 
-                <Field id="callingNumber" label="Calling number" required error={errors.callingNumber}>
+                <Field id="callingNumber" label={isHin ? 'कॉलिंग नंबर' : 'Calling number'} required error={errors.callingNumber}>
                   <input
                     id="callingNumber"
                     type="tel"
@@ -1011,48 +1087,48 @@ export default function RegisterPage() {
                 </Field>
               </div>
 
-              <Field id="fullAddress" label="Full address" required error={errors.fullAddress}>
+              <Field id="fullAddress" label={isHin ? 'पूरा पता' : 'Full address'} required error={errors.fullAddress}>
                 <textarea
                   id="fullAddress"
                   rows={2}
                   value={fullAddress}
                   onChange={bind(setFullAddress, 'fullAddress')}
-                  placeholder="Street address, house no., locality..."
+                  placeholder={isHin ? 'सड़क का पता, मकान नंबर, इलाका...' : 'Street address, house no., locality...'}
                   autoComplete="street-address"
                   className={`${inputCls(errors.fullAddress)} resize-none`}
                 />
               </Field>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Field id="city" label="City" required error={errors.city}>
+                <Field id="city" label={isHin ? 'शहर' : 'City'} required error={errors.city}>
                   <input
                     id="city"
                     type="text"
                     value={city}
                     onChange={bind(setCity, 'city')}
-                    placeholder="e.g. Jaipur"
+                    placeholder={isHin ? 'जैसे: जयपुर' : 'e.g. Jaipur'}
                     className={inputCls(errors.city)}
                   />
                 </Field>
 
-                <Field id="state" label="State" required error={errors.state}>
+                <Field id="state" label={isHin ? 'राज्य' : 'State'} required error={errors.state}>
                   <input
                     id="state"
                     type="text"
                     value={state}
                     onChange={bind(setState, 'state')}
-                    placeholder="e.g. Rajasthan"
+                    placeholder={isHin ? 'जैसे: राजस्थान' : 'e.g. Rajasthan'}
                     className={inputCls(errors.state)}
                   />
                 </Field>
 
-                <Field id="country" label="Country" required error={errors.country}>
+                <Field id="country" label={isHin ? 'देश' : 'Country'} required error={errors.country}>
                   <input
                     id="country"
                     type="text"
                     value={country}
                     onChange={bind(setCountry, 'country')}
-                    placeholder="India"
+                    placeholder={isHin ? 'भारत' : 'India'}
                     className={inputCls(errors.country)}
                   />
                 </Field>
@@ -1062,11 +1138,11 @@ export default function RegisterPage() {
             {/* SOCIAL */}
             <SectionCard
               icon={Globe}
-              title={`${socialNo}. Social Media Profiles`}
-              subtitle="Add up to two links (Instagram, YouTube, Facebook, LinkedIn, etc.)."
+              title={isHin ? `${socialNo}. सोशल मीडिया प्रोफ़ाइल` : `${socialNo}. Social Media Profiles`}
+              subtitle={isHin ? 'अधिकतम दो लिंक जोड़ें (इंस्टाग्राम, यूट्यूब, फेसबुक, लिंक्डइन आदि)।' : 'Add up to two links (Instagram, YouTube, Facebook, LinkedIn, etc.).'}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Field id="socialLink1" label="Social media link 1" error={errors.socialLink1}>
+                <Field id="socialLink1" label={isHin ? 'सोशल मीडिया लिंक 1' : 'Social media link 1'} error={errors.socialLink1}>
                   <input
                     id="socialLink1"
                     type="url"
@@ -1077,7 +1153,7 @@ export default function RegisterPage() {
                   />
                 </Field>
 
-                <Field id="socialLink2" label="Social media link 2" error={errors.socialLink2}>
+                <Field id="socialLink2" label={isHin ? 'सोशल मीडिया लिंक 2' : 'Social media link 2'} error={errors.socialLink2}>
                   <input
                     id="socialLink2"
                     type="url"
@@ -1100,11 +1176,11 @@ export default function RegisterPage() {
                 {submitting ? (
                   <>
                     <RefreshCw className="w-5 h-5 animate-spin" />
-                    <span>Submitting...</span>
+                    <span>{isHin ? 'जमा हो रहा है...' : 'Submitting...'}</span>
                   </>
                 ) : (
                   <>
-                    <span>Submit registration</span>
+                    <span>{isHin ? 'पंजीकरण जमा करें' : 'Submit registration'}</span>
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}

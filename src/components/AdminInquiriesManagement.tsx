@@ -176,38 +176,10 @@ export default function AdminInquiriesManagement() {
               Review and respond to inquiries submitted by visitors from the public MAYAD Contact page.
             </p>
           </div>
-
-          <div className="flex gap-3">
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-center">
-              <span className="block text-xl font-black text-amber-300">{pendingCount}</span>
-              <span className="text-[10px] font-bold text-amber-400/90 uppercase">Pending Inquiries</span>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-center">
-              <span className="block text-xl font-black text-white">{inquiries.length}</span>
-              <span className="text-[10px] font-bold text-slate-400 uppercase">Total Loaded</span>
-            </div>
-          </div>
         </div>
 
         {/* Filter Bar */}
         <div className="mt-6 border-t border-white/10 pt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          {/* Status Tabs */}
-          <div className="flex rounded-xl bg-slate-950 p-1 border border-white/10 overflow-x-auto">
-            {(['all', 'Pending', 'In Review', 'Resolved', 'Archived'] as const).map((st) => (
-              <button
-                key={st}
-                onClick={() => setStatusFilter(st)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition whitespace-nowrap ${
-                  statusFilter === st
-                    ? 'bg-amber-400 text-slate-950'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                {st === 'all' ? 'All Status' : st}
-              </button>
-            ))}
-          </div>
-
           <div className="flex flex-wrap items-center gap-3">
             {/* Category Dropdown */}
             <select
@@ -263,7 +235,6 @@ export default function AdminInquiriesManagement() {
                   <th className="p-4">Sender Details</th>
                   <th className="p-4">Subject & Category</th>
                   <th className="p-4">Date & Time</th>
-                  <th className="p-4">Status</th>
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -296,28 +267,7 @@ export default function AdminInquiriesManagement() {
                       </span>
                     </td>
 
-                    <td className="p-4">
-                      {item.status === 'Pending' && (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/40 bg-amber-950/80 px-2 py-1 text-[10px] font-bold text-amber-400">
-                          <Clock className="h-3 w-3" /> Pending
-                        </span>
-                      )}
-                      {item.status === 'In Review' && (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-blue-500/40 bg-blue-950/80 px-2 py-1 text-[10px] font-bold text-blue-300">
-                          <Clock className="h-3 w-3" /> In Review
-                        </span>
-                      )}
-                      {item.status === 'Resolved' && (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-emerald-500/40 bg-emerald-950/80 px-2 py-1 text-[10px] font-bold text-emerald-400">
-                          <CheckCircle className="h-3 w-3" /> Resolved
-                        </span>
-                      )}
-                      {item.status === 'Archived' && (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-slate-500/40 bg-slate-950 px-2 py-1 text-[10px] font-bold text-slate-400">
-                          Archived
-                        </span>
-                      )}
-                    </td>
+
 
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -404,20 +354,7 @@ export default function AdminInquiriesManagement() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between border-t border-white/10 pt-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-slate-400 font-semibold">Status:</span>
-                  <select
-                    value={selectedInquiry.status}
-                    onChange={(e) => handleUpdateStatus(selectedInquiry._id, e.target.value)}
-                    className="rounded-lg border border-white/10 bg-slate-950 px-3 py-1.5 text-xs font-bold text-white focus:border-amber-400 focus:outline-none"
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="In Review">In Review</option>
-                    <option value="Resolved">Resolved</option>
-                    <option value="Archived">Archived</option>
-                  </select>
-                </div>
+              <div className="flex items-center justify-end border-t border-white/10 pt-4">
 
                 <button
                   type="button"

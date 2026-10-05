@@ -318,6 +318,54 @@ export const adminService = {
     return data;
   },
 
+  // 3B. UPDATE ADMIN PROFILE
+  updateProfile: async (payload: { email?: string; firstName?: string; lastName?: string }): Promise<AdminAuthResponse> => {
+    const token = getAdminToken();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${ADMIN_API_URL}/profile`, {
+      method: 'PUT',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'Failed to update admin profile');
+    }
+    return data;
+  },
+
+  // 3C. UPDATE ADMIN PASSWORD
+  updatePassword: async (payload: { currentPassword?: string; newPassword: string }): Promise<{ success: boolean; message: string }> => {
+    const token = getAdminToken();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${ADMIN_API_URL}/change-password`, {
+      method: 'PUT',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'Failed to update password');
+    }
+    return data;
+  },
+
   // 4. LOGOUT ADMIN
   logout: async (): Promise<{ success: boolean; message: string }> => {
     const token = getAdminToken();

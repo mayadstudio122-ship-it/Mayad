@@ -218,7 +218,7 @@ export const translations = {
     mayadOriginals: 'मायड़ ओरिजिनल्स',
     originalsSubtitle: 'वैश्विक दर्शकों के लिए बनाई गई विशेष मूल कहानियाँ और सिनेमा',
     popularPersonalities: 'लोकप्रिय हस्तियाँ',
-    personalitiesSubtitle: 'राजस्थान के प्रसिद्ध अभिनेता, निर्देशक, गायक और सांस्कृतिक प्रतीक',
+    personalitiesSubtitle: 'मायड़ के प्रसिद्ध अभिनेता, निर्देशक, गायक और सांस्कृतिक प्रतीक',
     ceoFounder: 'मायड़ के संस्थापक एवं मुख्य कार्यकारी अधिकारी',
     founderSubtitle: 'राजस्थानी मनोरंजन के लिए पहला समर्पित ओटीटी प्लेटफॉर्म',
     top5ThisWeek: 'इस सप्ताह के टॉप 5',

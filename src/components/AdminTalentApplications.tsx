@@ -29,6 +29,8 @@ import {
   User,
   X,
   FileCheck,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 import {
   adminService,
@@ -78,6 +80,7 @@ export default function AdminTalentApplications({
   const [roleFilter, setRoleFilter] = useState('All');
   const [experienceFilter, setExperienceFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState<string>('All');
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -201,37 +204,30 @@ export default function AdminTalentApplications({
   return (
     <div className="space-y-6">
       {/* =========================================================
-          STATS CARDS
+          STATS OVERVIEW CARD
       ========================================================= */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="rounded-2xl bg-[#090d1f]/90 border border-white/10 p-4 shadow-xl">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Applications</span>
-          <div className="text-2xl font-black text-white mt-1">{stats.total}</div>
+      <div className="rounded-2xl bg-gradient-to-r from-[#090d1f] via-[#0d1530] to-[#090d1f] border border-white/10 p-5 sm:p-6 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-extrabold">
+            <Users className="w-3.5 h-3.5" />
+            <span>TALENT NETWORK INTAKE</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-white">
+            Talent Applications Directory
+          </h2>
+          <p className="text-xs text-slate-400 max-w-xl">
+            View, manage, and inspect all talent registration dossiers submitted via the MAYAD Join portal.
+          </p>
         </div>
 
-        <div className="rounded-2xl bg-[#090d1f]/90 border border-yellow-500/30 p-4 shadow-xl">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-yellow-400">Pending Review</span>
-          <div className="text-2xl font-black text-yellow-300 mt-1">{stats.pending}</div>
-        </div>
-
-        <div className="rounded-2xl bg-[#090d1f]/90 border border-blue-500/30 p-4 shadow-xl">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">Under Review</span>
-          <div className="text-2xl font-black text-blue-300 mt-1">{stats.underReview}</div>
-        </div>
-
-        <div className="rounded-2xl bg-[#090d1f]/90 border border-[#D4AF37]/40 p-4 shadow-xl">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5D77A]">Shortlisted</span>
-          <div className="text-2xl font-black text-[#F5D77A] mt-1">{stats.shortlisted}</div>
-        </div>
-
-        <div className="rounded-2xl bg-[#090d1f]/90 border border-emerald-500/30 p-4 shadow-xl">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400">Approved</span>
-          <div className="text-2xl font-black text-emerald-300 mt-1">{stats.approved}</div>
-        </div>
-
-        <div className="rounded-2xl bg-[#090d1f]/90 border border-red-500/30 p-4 shadow-xl">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-red-400">Rejected</span>
-          <div className="text-2xl font-black text-red-300 mt-1">{stats.rejected}</div>
+        <div className="flex items-center gap-4 bg-black/40 border border-white/10 px-5 py-3.5 rounded-2xl shrink-0">
+          <div className="p-3 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-400">
+            <Users className="w-6 h-6" />
+          </div>
+          <div>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Applications</span>
+            <span className="text-2xl sm:text-3xl font-black text-amber-300">{stats.total}</span>
+          </div>
         </div>
       </div>
 
@@ -288,23 +284,31 @@ export default function AdminTalentApplications({
             </select>
           </div>
 
-          {/* Status Filter */}
-          <div className="flex items-center gap-1.5 bg-black/60 border border-white/15 rounded-xl px-3 py-1.5 text-xs">
-            <select
-              value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="bg-transparent text-white focus:outline-none text-xs font-semibold cursor-pointer"
-            >
-              {STATUS_OPTIONS.map((st) => (
-                <option key={st} value={st} className="bg-[#090d1f] text-white">
-                  Status: {st}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* View Mode Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setViewMode(viewMode === 'table' ? 'grid' : 'table')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-all ${
+              viewMode === 'grid'
+                ? 'bg-amber-400 text-black border-amber-400 shadow-[0_0_15px_rgba(245,197,24,0.3)] font-extrabold'
+                : 'bg-black/60 text-slate-300 border-white/15 hover:border-white/30 hover:text-white'
+            }`}
+            title={viewMode === 'grid' ? 'Switch to Table View' : 'Switch to Grid View (Large Photos)'}
+          >
+            {viewMode === 'grid' ? (
+              <>
+                <List className="w-3.5 h-3.5" />
+                <span>Table</span>
+              </>
+            ) : (
+              <>
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Grid Cards</span>
+              </>
+            )}
+          </button>
+
+
 
           {/* Refresh Button */}
           <button
@@ -334,6 +338,99 @@ export default function AdminTalentApplications({
               No registration submissions match your current search query or filter parameters.
             </p>
           </div>
+        ) : viewMode === 'grid' ? (
+          /* GRID CARD VIEW (Large Photos matching Artists Accounts view) */
+          <div className="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            {applications.map((app) => (
+              <motion.div
+                key={app.id}
+                whileHover={{ y: -4 }}
+                className="rounded-3xl border border-white/10 bg-[#070b18] overflow-hidden shadow-2xl flex flex-col justify-between group transition-all"
+              >
+                {/* Image Container with Badge */}
+                <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-black">
+                  <img
+                    src={app.profilePhoto || '/Default.jpg'}
+                    alt={app.fullName}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/Default.jpg';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#070b18] via-transparent to-black/30 pointer-events-none" />
+
+                  {/* Experience Level Badge */}
+                  <div className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/90 text-black font-extrabold text-[10px] uppercase tracking-wider shadow-md backdrop-blur-md">
+                    <ShieldCheck className="w-3 h-3 text-black" />
+                    <span>{app.experienceLevel}</span>
+                  </div>
+
+                  {/* Primary Role Badge */}
+                  {app.interestedRoles && app.interestedRoles.length > 0 && (
+                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/80 border border-amber-400/40 text-amber-300 font-extrabold text-[10px] uppercase tracking-wider backdrop-blur-md">
+                      {app.interestedRoles[0]}
+                    </div>
+                  )}
+                </div>
+
+                {/* Details Container */}
+                <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-black text-white truncate group-hover:text-amber-300 transition-colors">
+                      {app.fullName}
+                    </h3>
+                    <p className="text-xs font-semibold text-slate-400">
+                      {app.age} Yrs • {app.gender}
+                    </p>
+
+                    {/* Location & Contact */}
+                    <div className="mt-3 space-y-1.5 text-xs text-slate-400">
+                      <div className="flex items-center gap-1.5 truncate">
+                        <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span className="truncate">{app.city}, {app.state}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 truncate">
+                        <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span className="truncate font-mono">WA: {app.whatsAppNumber}</span>
+                      </div>
+                    </div>
+
+                    {/* All Roles */}
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {app.interestedRoles.map((r, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-400/10 text-amber-300 border border-amber-400/30"
+                        >
+                          {r}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Card Bottom Actions */}
+                  <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedApplication(app)}
+                      className="flex-1 py-2 px-3 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-300 hover:bg-amber-400 hover:text-black font-bold text-xs transition-all inline-flex items-center justify-center gap-1.5"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>View</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setApplicationToDelete(app)}
+                      className="p-2 rounded-xl bg-red-600/20 border border-red-500/30 text-red-300 hover:bg-red-600/40 transition-all"
+                      title="Delete Application"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -345,7 +442,7 @@ export default function AdminTalentApplications({
                   <th className="py-4 px-4">Experience</th>
                   <th className="py-4 px-4">Contact Info</th>
                   <th className="py-4 px-4">Submitted Date</th>
-                  <th className="py-4 px-4">Status</th>
+
                   <th className="py-4 px-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -413,16 +510,7 @@ export default function AdminTalentApplications({
                       })}
                     </td>
 
-                    {/* STATUS BADGE */}
-                    <td className="py-3 px-4">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border ${getStatusBadge(
-                          app.status
-                        )}`}
-                      >
-                        {app.status}
-                      </span>
-                    </td>
+
 
                     {/* ACTIONS */}
                     <td className="py-3 px-4 text-right">

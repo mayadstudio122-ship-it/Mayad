@@ -209,7 +209,7 @@ export default function Navbar() {
                   : 'bg-mayad-gold text-black shadow-[0_0_20px_rgba(245,197,24,0.25)] hover:bg-yellow-400 hover:shadow-[0_0_30px_rgba(245,197,24,0.5)]'
               }`}
             >
-              <span>Artist Registration</span>
+              <span>{language === 'HIN' ? 'आर्टिस्ट रजिस्ट्रेशन' : 'Artist Registration'}</span>
               <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
           </div>
@@ -221,7 +221,7 @@ export default function Navbar() {
               href="/register"
               className="inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-mayad-gold px-3 text-[11px] font-extrabold uppercase tracking-wide text-black shadow-[0_0_12px_rgba(245,197,24,0.3)] transition-all active:scale-95 hover:bg-yellow-400"
             >
-              Artist Registration
+              {language === 'HIN' ? 'आर्टिस्ट रजिस्ट्रेशन' : 'Artist Registration'}
             </Link>
 
             {/* MOBILE LANGUAGE */}
@@ -347,7 +347,7 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 px-5 py-3.5 text-base font-extrabold uppercase tracking-wider text-black shadow-[0_4px_25px_rgba(245,197,24,0.4)] transition-all hover:from-amber-300 hover:to-yellow-400 active:scale-98"
             >
-              <span>Artist Registration</span>
+              <span>{language === 'HIN' ? 'आर्टिस्ट रजिस्ट्रेशन' : 'Artist Registration'}</span>
               <ArrowUpRight className="h-5 w-5" />
             </Link>
           </motion.div>

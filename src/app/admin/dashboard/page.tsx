@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -37,6 +38,9 @@ import {
   Plus,
   UserPlus,
   HelpCircle,
+  Mail,
+  Lock,
+  KeyRound,
 } from 'lucide-react';
 import {
   adminService,
@@ -61,7 +65,7 @@ export default function AdminDashboardPage() {
   const [authLoading, setAuthLoading] = useState(true);
   // Layout State
   const [activeTab, setActiveTab] = useState<
-   'overview' | 'movies' | 'artists' | 'talent-applications' | 'add-artist' | 'blogs' | 'inquiries' | 'faq' | 'profile' | 'settings'
+    'overview' | 'movies' | 'talent-applications' | 'add-artist' | 'blogs' | 'inquiries' | 'faq' | 'profile' | 'settings'
   >('overview');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -103,6 +107,78 @@ export default function AdminDashboardPage() {
     imdb: '',
     instagram: '',
   });
+
+  // Admin Profile Update State
+  const [editEmail, setEditEmail] = useState('');
+  const [emailUpdating, setEmailUpdating] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordUpdating, setPasswordUpdating] = useState(false);
+
+  useEffect(() => {
+    if (adminUser?.email) {
+      setEditEmail(adminUser.email);
+    }
+  }, [adminUser]);
+
+  const handleUpdateEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editEmail.trim()) {
+      showToast('Email address cannot be empty', 'error');
+      return;
+    }
+    try {
+      setEmailUpdating(true);
+      const res = await adminService.updateProfile({ email: editEmail.trim() });
+      if (res.success && res.admin) {
+        setAdminUser(res.admin as AdminUser);
+        showToast('Email address updated successfully!');
+      } else {
+        showToast(res.message || 'Failed to update email address', 'error');
+      }
+    } catch (err: any) {
+      showToast(err?.message || 'Failed to update email address', 'error');
+    } finally {
+      setEmailUpdating(false);
+    }
+  };
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPassword) {
+      showToast('New Password is required', 'error');
+      return;
+    }
+    if (newPassword.length < 6) {
+      showToast('New Password must be at least 6 characters long', 'error');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      showToast('New Password and Confirm Password do not match', 'error');
+      return;
+    }
+
+    try {
+      setPasswordUpdating(true);
+      const res = await adminService.updatePassword({
+        currentPassword,
+        newPassword,
+      });
+      if (res.success) {
+        showToast('Password updated successfully!');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      } else {
+        showToast(res.message || 'Failed to update password', 'error');
+      }
+    } catch (err: any) {
+      showToast(err?.message || 'Failed to update password', 'error');
+    } finally {
+      setPasswordUpdating(false);
+    }
+  };
 
   const handleCreateArtist = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,14 +286,14 @@ export default function AdminDashboardPage() {
   const loadArtistsData = async () => {
     setArtistsLoading(true);
     try {
-     const res = await adminService.getArtists({
-  page: currentPage,
-  limit: 10,
-  search: searchQuery,
-  ...(statusFilter !== "all" && {
-    status: statusFilter,
-  }),
-});
+      const res = await adminService.getArtists({
+        page: currentPage,
+        limit: 10,
+        search: searchQuery,
+        ...(statusFilter !== "all" && {
+          status: statusFilter,
+        }),
+      });
       if (res.success) {
         setArtists(res.artists);
         setTotalPages(res.pagination.pages);
@@ -234,11 +310,6 @@ export default function AdminDashboardPage() {
       loadDashboardStats();
     }
   }, [authLoading, adminUser]);
-  useEffect(() => {
-    if (!authLoading && adminUser && activeTab === 'artists') {
-      loadArtistsData();
-    }
-  }, [activeTab, currentPage, statusFilter, authLoading, adminUser]);
   // Handle Search Submit
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -326,11 +397,10 @@ export default function AdminDashboardPage() {
             initial={{ opacity: 0, y: -20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.9 }}
-            className={`fixed top-5 right-5 z-[9999] px-4 py-3 rounded-xl shadow-2xl border flex items-center gap-3 backdrop-blur-xl text-sm font-medium ${
-              toastMessage.type === 'success'
+            className={`fixed top-5 right-5 z-[9999] px-4 py-3 rounded-xl shadow-2xl border flex items-center gap-3 backdrop-blur-xl text-sm font-medium ${toastMessage.type === 'success'
                 ? 'bg-emerald-950/90 border-emerald-500/40 text-emerald-200'
                 : 'bg-rose-950/90 border-rose-500/40 text-rose-200'
-            }`}
+              }`}
           >
             {toastMessage.type === 'success' ? (
               <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
@@ -345,16 +415,20 @@ export default function AdminDashboardPage() {
           DESKTOP SIDEBAR
       ========================================================= */}
       <aside
-        className={`hidden md:flex flex-col border-r border-white/10 bg-[#070b19] transition-all duration-300 relative z-30 ${
-          sidebarCollapsed ? 'w-20' : 'w-64'
-        }`}
+        className={`hidden md:flex flex-col border-r border-white/10 bg-[#070b19] transition-all duration-300 relative z-30 ${sidebarCollapsed ? 'w-20' : 'w-64'
+          }`}
       >
         {/* Sidebar Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
           {!sidebarCollapsed ? (
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-black font-extrabold text-sm shadow-[0_0_15px_rgba(245,197,24,0.3)]">
-                M
+              <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-amber-400/40 shrink-0 shadow-[0_0_15px_rgba(245,197,24,0.3)]">
+                <Image
+                  src="/mayad.jpg"
+                  alt="MAYAD"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="font-extrabold text-sm tracking-wider text-white">MAYAD <span className="text-amber-400">ADMIN</span></span>
@@ -362,8 +436,13 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="w-10 h-10 mx-auto rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-black font-extrabold text-base shadow-[0_0_15px_rgba(245,197,24,0.3)]">
-              M
+            <div className="relative w-9 h-9 mx-auto rounded-lg overflow-hidden border border-amber-400/40 shadow-[0_0_15px_rgba(245,197,24,0.3)]">
+              <Image
+                src="/mayad.jpg"
+                alt="MAYAD"
+                fill
+                className="object-cover"
+              />
             </div>
           )}
           <button
@@ -379,7 +458,6 @@ export default function AdminDashboardPage() {
           {[
             { id: 'overview', label: 'Overview', icon: LayoutDashboard },
             { id: 'movies', label: 'Movies Management', icon: Film },
-            { id: 'artists', label: 'Artists Accounts', icon: Users, badge: stats?.pendingApprovals },
             { id: 'talent-applications', label: 'Talent Applications', icon: Award },
             { id: 'add-artist', label: 'Add Artist', icon: UserPlus },
             { id: 'blogs', label: 'Blogs Management', icon: BookOpen },
@@ -387,18 +465,17 @@ export default function AdminDashboardPage() {
             { id: 'faq', label: 'FAQ Management', icon: HelpCircle },
             { id: 'profile', label: 'Admin Profile', icon: ShieldCheck },
             { id: 'settings', label: 'Settings', icon: Settings },
-          ].map((item) => {
+          ].map((item: { id: string; label: string; icon: any; badge?: number }) => {
             const Icon = item.icon;
             const active = activeTab === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id as any)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all duration-200 group relative ${
-                  active
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all duration-200 group relative ${active
                     ? 'bg-gradient-to-r from-amber-500/20 to-yellow-500/10 text-amber-300 border border-amber-500/30 font-semibold shadow-[0_0_20px_rgba(245,197,24,0.1)]'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                }`}
+                  }`}
               >
                 <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-amber-400' : 'group-hover:text-amber-300'}`} />
                 {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
@@ -451,8 +528,13 @@ export default function AdminDashboardPage() {
             >
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-black font-extrabold text-sm">
-                    M
+                  <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-amber-400/40 shrink-0 shadow-[0_0_12px_rgba(245,197,24,0.3)]">
+                    <Image
+                      src="/mayad.jpg"
+                      alt="MAYAD"
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                   <span className="font-extrabold text-sm text-white">MAYAD <span className="text-amber-400">ADMIN</span></span>
                 </div>
@@ -464,7 +546,6 @@ export default function AdminDashboardPage() {
                 {[
                   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
                   { id: 'movies', label: 'Movies Management', icon: Film },
-                  { id: 'artists', label: 'Artists Accounts', icon: Users, badge: stats?.pendingApprovals },
                   { id: 'talent-applications', label: 'Talent Applications', icon: Award },
                   { id: 'add-artist', label: 'Add Artist', icon: UserPlus },
                   { id: 'blogs', label: 'Blogs Management', icon: BookOpen },
@@ -472,7 +553,7 @@ export default function AdminDashboardPage() {
                   { id: 'faq', label: 'FAQ Management', icon: HelpCircle },
                   { id: 'profile', label: 'Admin Profile', icon: ShieldCheck },
                   { id: 'settings', label: 'Settings', icon: Settings },
-                ].map((item) => {
+                ].map((item: { id: string; label: string; icon: any; badge?: number }) => {
                   const Icon = item.icon;
                   const active = activeTab === item.id;
                   return (
@@ -482,11 +563,10 @@ export default function AdminDashboardPage() {
                         setActiveTab(item.id as any);
                         setMobileMenuOpen(false);
                       }}
-                      className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium ${
-                        active
+                      className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium ${active
                           ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                           : 'text-slate-400 hover:bg-slate-800/40'
-                      }`}
+                        }`}
                     >
                       <Icon className="w-5 h-5 text-amber-400" />
                       <span>{item.label}</span>
@@ -527,7 +607,6 @@ export default function AdminDashboardPage() {
               <h2 className="text-base sm:text-lg font-bold text-white capitalize">
                 {activeTab === 'overview' && 'Dashboard Overview'}
                 {activeTab === 'movies' && 'Movies & Series Management'}
-                {activeTab === 'artists' && 'Artist Directory & Approvals'}
                 {activeTab === 'talent-applications' && 'Talent Applications (Join MAYAD)'}
                 {activeTab === 'add-artist' && 'Add Artist & Directory Management'}
                 {activeTab === 'blogs' && 'Blogs & Articles Management'}
@@ -536,7 +615,7 @@ export default function AdminDashboardPage() {
                 {activeTab === 'profile' && 'Administrator Profile'}
                 {activeTab === 'settings' && 'System Settings'}
               </h2>
-              <span className="text-[11px] text-slate-400 hidden sm:block">MAYAD OTT Administrative Console</span>
+              <span className="text-[11px] text-slate-400 hidden sm:block">MAYAD Administrative Console</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -547,15 +626,27 @@ export default function AdminDashboardPage() {
             >
               <RefreshCw className={`w-4 h-4 ${dataLoading ? 'animate-spin text-amber-400' : ''}`} />
             </button>
-            {/* Admin Badge */}
-            <div className="flex items-center gap-2.5 pl-2 sm:pl-4 border-l border-white/10">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 text-black font-extrabold flex items-center justify-center text-xs shadow-md">
-                {adminUser?.firstName?.[0] || 'A'}
+            {/* Admin Badge & Logout */}
+            <div className="flex items-center gap-3 pl-2 sm:pl-4 border-l border-white/10">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 text-black font-extrabold flex items-center justify-center text-xs shadow-md">
+                  {adminUser?.firstName?.[0] || 'A'}
+                </div>
+                <div className="hidden sm:flex flex-col">
+                  <span className="text-xs font-semibold text-white">{adminUser?.firstName} {adminUser?.lastName}</span>
+                  <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Super Admin</span>
+                </div>
               </div>
-              <div className="hidden sm:flex flex-col">
-                <span className="text-xs font-semibold text-white">{adminUser?.firstName} {adminUser?.lastName}</span>
-                <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Super Admin</span>
-              </div>
+
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500 hover:text-white text-xs font-bold transition-all shadow-md active:scale-95"
+                title="Logout from Admin Console"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
             </div>
           </div>
         </header>
@@ -567,7 +658,7 @@ export default function AdminDashboardPage() {
           {activeTab === 'overview' && (
             <div className="space-y-6">
               {/* Stat Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                 {/* 1. Total Artists */}
                 <motion.div
                   whileHover={{ y: -3 }}
@@ -655,9 +746,9 @@ export default function AdminDashboardPage() {
                 </motion.div>
               </div>
               {/* Charts & Analytics Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Trend Chart (2 Cols) */}
-                <div className="lg:col-span-2 rounded-2xl bg-[#090d1f]/90 border border-white/10 p-5 sm:p-6 flex flex-col justify-between">
+              <div className="grid grid-cols-1 gap-6">
+                {/* Trend Chart */}
+                <div className="rounded-2xl bg-[#090d1f]/90 border border-white/10 p-5 sm:p-6 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
@@ -697,76 +788,11 @@ export default function AdminDashboardPage() {
                   <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
                     <span>Source: MAYAD MongoDB Artist Aggregations</span>
                     <button
-                      onClick={() => setActiveTab('artists')}
+                      onClick={() => setActiveTab('talent-applications')}
                       className="text-amber-400 hover:underline font-semibold text-xs"
                     >
-                      Manage Artists →
+                      Manage Talent Applications →
                     </button>
-                  </div>
-                </div>
-                {/* Status Breakdown Donut/Bar Chart (1 Col) */}
-                <div className="rounded-2xl bg-[#090d1f]/90 border border-white/10 p-5 sm:p-6 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2 mb-4">
-                      <UserCheck className="w-4 h-4 text-emerald-400" />
-                      <span>Account Status Ratio</span>
-                    </h3>
-                    <div className="space-y-4 my-6">
-                      {/* Approved */}
-                      <div>
-                        <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400" /> Approved</span>
-                          <span>{stats?.approvedArtists ?? 0}</span>
-                        </div>
-                        <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-emerald-400 transition-all duration-500"
-                            style={{
-                              width: `${
-                                stats?.totalArtists ? ((stats.approvedArtists / stats.totalArtists) * 100) : 0
-                              }%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                      {/* Pending */}
-                      <div>
-                        <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400" /> Pending Approval</span>
-                          <span>{stats?.pendingApprovals ?? 0}</span>
-                        </div>
-                        <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-amber-400 transition-all duration-500"
-                            style={{
-                              width: `${
-                                stats?.totalArtists ? ((stats.pendingApprovals / stats.totalArtists) * 100) : 0
-                              }%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                      {/* Rejected */}
-                      <div>
-                        <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-400" /> Rejected</span>
-                          <span>{stats?.rejectedArtists ?? 0}</span>
-                        </div>
-                        <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-rose-400 transition-all duration-500"
-                            style={{
-                              width: `${
-                                stats?.totalArtists ? ((stats.rejectedArtists / stats.totalArtists) * 100) : 0
-                              }%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-900/80 border border-white/5 text-[11px] text-slate-400">
-                    <span>Pending applications require administrative verification before artists appear in public listings.</span>
                   </div>
                 </div>
               </div>
@@ -778,10 +804,10 @@ export default function AdminDashboardPage() {
                     <span>Recent Artist Registrations & Updates</span>
                   </h3>
                   <button
-                    onClick={() => setActiveTab('artists')}
+                    onClick={() => setActiveTab('talent-applications')}
                     className="text-xs text-amber-400 hover:text-amber-300 font-semibold"
                   >
-                    View All Artists
+                    View All Applications
                   </button>
                 </div>
                 <div className="overflow-x-auto">
@@ -803,13 +829,12 @@ export default function AdminDashboardPage() {
                             <td className="py-3 px-4 text-slate-400">{act.subtitle}</td>
                             <td className="py-3 px-4">
                               <span
-                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                                  act.status === 'Approved'
+                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${act.status === 'Approved'
                                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
                                     : act.status === 'Rejected'
-                                    ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                                    : 'bg-amber-500/10 text-amber-300 border border-amber-500/30'
-                                }`}
+                                      ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
+                                      : 'bg-amber-500/10 text-amber-300 border border-amber-500/30'
+                                  }`}
                               >
                                 {act.status}
                               </span>
@@ -819,10 +844,10 @@ export default function AdminDashboardPage() {
                             </td>
                             <td className="py-3 px-4 text-right">
                               <button
-                                onClick={() => setActiveTab('artists')}
+                                onClick={() => setActiveTab('talent-applications')}
                                 className="text-amber-400 hover:text-amber-300 text-xs font-semibold"
                               >
-                                Manage
+                                View
                               </button>
                             </td>
                           </tr>
@@ -852,198 +877,7 @@ export default function AdminDashboardPage() {
           {activeTab === 'talent-applications' && (
             <AdminTalentApplications showToast={showToast} onStatsUpdate={loadDashboardStats} />
           )}
-          {/* =====================================================
-              TAB 2: ARTISTS MANAGEMENT DIRECTORY
-          ===================================================== */}
-          {activeTab === 'artists' && (
-            <div className="space-y-6">
 
-              {/* Header Filters & Search */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 rounded-2xl bg-[#090d1f]/90 border border-white/10 p-4">
-                <form onSubmit={handleSearchSubmit} className="relative flex-1">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by artist name, email, category, location..."
-                    className="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-700/80 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"
-                  />
-                </form>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 bg-slate-900 border border-slate-700/80 px-3 py-2 rounded-xl">
-                    <Filter className="w-4 h-4 text-amber-400" />
-                    <select
-                      value={statusFilter}
-                      onChange={(e) => {
-                        setStatusFilter(e.target.value);
-                        setCurrentPage(1);
-                      }}
-                      className="bg-transparent text-xs sm:text-sm font-medium text-slate-200 focus:outline-none cursor-pointer"
-                    >
-                      <option value="all" className="bg-slate-900 text-slate-200">All Statuses</option>
-                      <option value="Pending Approval" className="bg-slate-900 text-amber-300">Pending Approval</option>
-                      <option value="Approved" className="bg-slate-900 text-emerald-300">Approved</option>
-                      <option value="Rejected" className="bg-slate-900 text-rose-300">Rejected</option>
-                    </select>
-                  </div>
-                  <button
-                    onClick={loadArtistsData}
-                    className="p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 text-slate-300 hover:text-amber-400 transition-colors"
-                    title="Reload"
-                  >
-                    <RefreshCw className={`w-4 h-4 ${artistsLoading ? 'animate-spin text-amber-400' : ''}`} />
-                  </button>
-                </div>
-              </div>
-              {/* Data Table */}
-              <div className="rounded-2xl bg-[#090d1f]/90 border border-white/10 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs sm:text-sm text-slate-300">
-                    <thead className="bg-slate-900/90 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-white/10">
-                      <tr>
-                        <th className="py-4 px-4">Artist Profile</th>
-                        <th className="py-4 px-4">Category</th>
-                        <th className="py-4 px-4">Contact</th>
-                        <th className="py-4 px-4">Location</th>
-                        <th className="py-4 px-4">Status</th>
-                        <th className="py-4 px-4 text-center">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5">
-                      {artistsLoading ? (
-                        <tr>
-                          <td colSpan={6} className="py-12 text-center text-slate-400">
-                            <div className="inline-flex items-center gap-2">
-                              <div className="w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
-                              <span>Fetching artist records...</span>
-                            </div>
-                          </td>
-                        </tr>
-                      ) : artists.length > 0 ? (
-                        artists.map((artist) => (
-                          <tr key={artist.id} className="hover:bg-slate-800/30 transition-colors">
-                            {/* Profile Info */}
-                            <td className="py-3 px-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-full bg-slate-800 border border-amber-500/30 overflow-hidden shrink-0 flex items-center justify-center font-bold text-amber-400">
-                                  {artist.fullName?.[0] || 'A'}
-                                </div>
-                                <div className="flex flex-col min-w-0">
-                                  <span className="font-bold text-white truncate flex items-center gap-1.5">
-                                    {artist.fullName}
-                                    {artist.isVerified && <ShieldCheck className="w-4 h-4 text-emerald-400 inline shrink-0" />}
-                                  </span>
-                                  {artist.stageName && (
-                                    <span className="text-[11px] text-amber-300/80">Stage: {artist.stageName}</span>
-                                  )}
-                                </div>
-                              </div>
-                            </td>
-                            {/* Category */}
-                            <td className="py-3 px-4 font-medium text-slate-200">
-                              {artist.category}
-                              {artist.secondaryCategory && (
-                                <span className="block text-[10px] text-slate-500">{artist.secondaryCategory}</span>
-                              )}
-                            </td>
-                            {/* Contact */}
-                            <td className="py-3 px-4 text-xs">
-                              <div className="text-slate-300 truncate max-w-[180px]">{artist.email}</div>
-                              <div className="text-slate-500">{artist.phone}</div>
-                            </td>
-                            {/* Location */}
-                            <td className="py-3 px-4 text-slate-400 text-xs">{artist.location || 'Rajasthan'}</td>
-                            {/* Status */}
-                            <td className="py-3 px-4">
-                              <span
-                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                                  artist.accountStatus === 'Approved'
-                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                                    : artist.accountStatus === 'Rejected'
-                                    ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                                    : 'bg-amber-500/10 text-amber-300 border border-amber-500/30'
-                                }`}
-                              >
-                                {artist.accountStatus}
-                              </span>
-                            </td>
-                            {/* Actions */}
-                            <td className="py-3 px-4">
-                              <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => setSelectedArtist(artist)}
-                                  className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
-                                  title="View Full Profile"
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </button>
-                                {artist.accountStatus !== 'Approved' && (
-                                  <button
-                                    onClick={() => handleUpdateStatus(artist.id, 'Approved')}
-                                    disabled={actionLoadingId === artist.id}
-                                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40 text-xs font-bold transition-colors disabled:opacity-50"
-                                    title="Approve Artist"
-                                  >
-                                    Approve
-                                  </button>
-                                )}
-                                {artist.accountStatus !== 'Rejected' && (
-                                  <button
-                                    onClick={() => handleUpdateStatus(artist.id, 'Rejected')}
-                                    disabled={actionLoadingId === artist.id}
-                                    className="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/40 text-xs font-bold transition-colors disabled:opacity-50"
-                                    title="Reject Artist"
-                                  >
-                                    Reject
-                                  </button>
-                                )}
-                                <button
-                                  onClick={() => setArtistToDelete(artist)}
-                                  className="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:text-rose-300 hover:bg-rose-500/20 border border-rose-500/30 transition-colors"
-                                  title="Remove Artist Account"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan={6} className="py-12 text-center text-slate-500 text-xs">
-                            No artists matching filter criteria.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-between px-4 py-3 bg-slate-900/60 border-t border-white/10 text-xs text-slate-400">
-                    <span>Page {currentPage} of {totalPages}</span>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                        disabled={currentPage === 1}
-                        className="px-3 py-1 rounded-lg bg-slate-800 text-white disabled:opacity-40"
-                      >
-                        Previous
-                      </button>
-                      <button
-                        onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                        className="px-3 py-1 rounded-lg bg-slate-800 text-white disabled:opacity-40"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
           {/* =====================================================
               TAB: ADD ARTIST & DIRECTORY MANAGEMENT
           ===================================================== */}
@@ -1072,33 +906,134 @@ export default function AdminDashboardPage() {
               TAB: ADMIN PROFILE
           ===================================================== */}
           {activeTab === 'profile' && (
-            <div className="rounded-2xl bg-[#090d1f]/90 border border-amber-500/20 p-6 sm:p-8 max-w-2xl mx-auto space-y-6">
-              <div className="flex items-center gap-4 border-b border-white/10 pb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 text-black font-extrabold flex items-center justify-center text-2xl shadow-xl">
-                  {adminUser?.firstName?.[0] || 'A'}
+            <div className="space-y-6 max-w-3xl mx-auto">
+              {/* Profile Card & Editable Email */}
+              <div className="rounded-2xl bg-[#090d1f]/90 border border-amber-500/20 p-6 sm:p-8 space-y-6 shadow-xl">
+                <div className="flex items-center gap-4 border-b border-white/10 pb-6">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 text-black font-extrabold flex items-center justify-center text-2xl shadow-xl">
+                    {adminUser?.firstName?.[0] || 'A'}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-extrabold text-white">{adminUser?.firstName} {adminUser?.lastName}</h3>
+                    <span className="text-xs text-amber-400 font-bold uppercase tracking-wider">MAYAD Platform Super Administrator</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-extrabold text-white">{adminUser?.firstName} {adminUser?.lastName}</h3>
-                  <span className="text-xs text-amber-400 font-bold uppercase tracking-wider">MAYAD Platform Super Administrator</span>
+
+                {/* Email Address Update Form */}
+                <form onSubmit={handleUpdateEmail} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-400 mb-1.5 flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-amber-400" />
+                      <span>Email Address</span>
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <input
+                        type="email"
+                        required
+                        value={editEmail}
+                        onChange={(e) => setEditEmail(e.target.value)}
+                        placeholder="admin@example.com"
+                        className="flex-1 bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-400"
+                      />
+                      <button
+                        type="submit"
+                        disabled={emailUpdating}
+                        className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md disabled:opacity-50 cursor-pointer transition-all shrink-0"
+                      >
+                        {emailUpdating ? (
+                          <>
+                            <RefreshCw className="w-4 h-4 animate-spin" />
+                            <span>Updating...</span>
+                          </>
+                        ) : (
+                          <span>Update Email</span>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </form>
+
+                <div className="p-4 rounded-xl bg-slate-900 border border-white/5 flex items-center justify-between">
+                  <div>
+                    <span className="text-xs text-slate-400 block uppercase font-bold">Role Privilege</span>
+                    <span className="font-semibold text-amber-300">{adminUser?.role?.toUpperCase()}</span>
+                  </div>
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                    Full Executive Access
+                  </span>
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-white/5">
-                  <span className="text-xs text-slate-500 block uppercase font-bold">Email Address</span>
-                  <span className="font-semibold text-slate-200">{adminUser?.email}</span>
+
+              {/* Password Change Section */}
+              <div className="rounded-2xl bg-[#090d1f]/90 border border-white/10 p-6 sm:p-8 space-y-5 shadow-xl">
+                <div className="flex items-center gap-2.5 border-b border-white/10 pb-4">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-white">Change Admin Password</h3>
+                    <p className="text-xs text-slate-400">Set a new password to secure your admin console</p>
+                  </div>
                 </div>
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-white/5">
-                  <span className="text-xs text-slate-500 block uppercase font-bold">Role Privilege</span>
-                  <span className="font-semibold text-amber-300">{adminUser?.role?.toUpperCase()}</span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-white/5">
-                  <span className="text-xs text-slate-500 block uppercase font-bold">Session Security</span>
-                  <span className="font-semibold text-emerald-400">JWT HTTP-Only Secured</span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-white/5">
-                  <span className="text-xs text-slate-500 block uppercase font-bold">Account ID</span>
-                  <span className="font-mono text-xs text-slate-400">{adminUser?.id}</span>
-                </div>
+
+                <form onSubmit={handleUpdatePassword} className="space-y-4 text-xs sm:text-sm">
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">Current Password (Optional)</label>
+                    <input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      placeholder="Enter current password"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">New Password *</label>
+                      <input
+                        type="password"
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="At least 6 characters"
+                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">Confirm New Password *</label>
+                      <input
+                        type="password"
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Re-enter new password"
+                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={passwordUpdating}
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg disabled:opacity-50 cursor-pointer transition-all hover:scale-[1.02] active:scale-95"
+                    >
+                      {passwordUpdating ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 animate-spin" />
+                          <span>Updating...</span>
+                        </>
+                      ) : (
+                        <>
+                          <KeyRound className="w-4 h-4" />
+                          <span>Update Password</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           )}

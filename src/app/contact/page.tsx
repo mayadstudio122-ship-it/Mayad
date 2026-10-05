@@ -12,7 +12,6 @@ import {
   CheckCircle,
   Building,
   Clock,
-  Film,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -114,7 +113,7 @@ export default function ContactPage() {
           >
             {isHin ? 'संपर्क एवं' : 'Contact'}{' '}
             <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent">
-              {isHin ? 'पूछताछ' : '& Inquiries'}
+              {isHin ? 'जानकारी' : '& Inquiries'}
             </span>
           </motion.h1>
 
@@ -188,18 +187,6 @@ export default function ContactPage() {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="rounded-3xl border border-amber-400/20 bg-gradient-to-br from-amber-500/10 via-slate-900 to-slate-900 p-6 text-xs text-slate-300 space-y-2">
-              <h4 className="font-bold text-amber-300 text-sm flex items-center gap-2">
-                <Film className="h-4 w-4 text-amber-400" />
-                {isHin ? 'कास्टिंग एवं कलाकार ऑडिशन' : 'Casting & Artist Auditions'}
-              </h4>
-              <p className="leading-relaxed">
-                {isHin
-                  ? 'पंजीकृत कलाकार सीधे कलाकार डैशबोर्ड (Artist Dashboard) में ऑडिशन नोटिस और प्रोजेक्ट असाइनमेंट प्राप्त कर सकते हैं।'
-                  : 'Registered artists can access audition notices and project assignments directly in the Artist Dashboard.'}
-              </p>
             </div>
           </div>
 

@@ -10,7 +10,23 @@ import { POPULAR_PERSONALITIES } from '@/data/content';
 import { useApp } from '@/context/AppContext';
 
 export default function PopularPersonalities() {
-  const { t } = useApp();
+  const { t, language } = useApp();
+  const isHin = language === 'HIN';
+
+  const ARTIST_NAME_HIN: Record<string, string> = {
+    'Abhi Soni': 'अभि सोनी',
+    'Kailash Mewadi': 'कैलाश मेवाड़ी',
+    'Ramesh Nagda': 'रमेश नागदा',
+    'Tara shree': 'तारा श्री',
+    'Garvakarnika Rathore': 'गर्वाकर्णिका राठौड़',
+  };
+
+  const ARTIST_ROLE_HIN: Record<string, string> = {
+    'Actor': 'अभिनेता',
+    'Mayad Actor': 'मायड़ अभिनेता',
+    'Director': 'निर्देशक',
+    'Singer': 'गायक',
+  };
 
   return (
     <section className="relative overflow-hidden border-y border-white/5 bg-[#02090d] pt-12 pb-10 sm:pt-20 sm:pb-14 lg:pt-24 lg:pb-14">
@@ -61,7 +77,11 @@ export default function PopularPersonalities() {
 
         <div className="grid grid-cols-5 gap-1 sm:flex sm:justify-center sm:gap-7 lg:gap-10">
 
-          {POPULAR_PERSONALITIES.map((person, index) => (
+          {POPULAR_PERSONALITIES.map((person, index) => {
+            const displayName = isHin ? ARTIST_NAME_HIN[person.name] || person.name : person.name;
+            const displayRole = isHin ? ARTIST_ROLE_HIN[person.role] || person.role : person.role;
+
+            return (
 
             <motion.div
               key={person.id}
@@ -109,7 +129,7 @@ export default function PopularPersonalities() {
 
                   <Image
                     src={person.imageUrl}
-                    alt={person.name}
+                    alt={displayName}
                     fill
                     sizes="175px"
                     className="
@@ -202,7 +222,7 @@ export default function PopularPersonalities() {
                     lg:text-lg
                   "
                 >
-                  {person.name}
+                  {displayName}
                 </h3>
 
 
@@ -226,14 +246,15 @@ export default function PopularPersonalities() {
                     lg:text-[11px]
                   "
                 >
-                  {person.role}
+                  {displayRole}
                 </p>
 
               </Link>
 
             </motion.div>
 
-          ))}
+            );
+          })}
 
         </div>
 

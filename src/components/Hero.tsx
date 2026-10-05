@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play, ChevronDown, ArrowUpRight } from "lucide-react";
 
+import { MAYAD_OFFICIAL_URL } from "@/utils/config";
+
 export default function Hero() {
   return (
     <section className="relative flex min-h-[calc(100vh-60px)] w-full items-center overflow-hidden bg-[#650900] sm:min-h-[720px] lg:min-h-[calc(100vh-70px)]">
@@ -80,7 +82,9 @@ export default function Hero() {
             </Link>
 
             <a
-              href="#movies"
+              href={MAYAD_OFFICIAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-white/40 bg-black/40 px-5 py-3 text-xs font-bold text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-yellow-400 hover:bg-black/60 sm:gap-3 sm:px-8 sm:py-4 sm:text-base"
             >
               <span className="flex h-5 w-5 items-center justify-center rounded-full border border-white/80 bg-white/10 transition-colors group-hover:border-yellow-400 group-hover:text-yellow-400 sm:h-6 sm:w-6">

@@ -22,3 +22,4 @@ export const getApiBaseUrl = (): string => {
 
 export const BACKEND_URL = getBackendUrl();
 export const API_BASE_URL = getApiBaseUrl();
+export const MAYAD_OFFICIAL_URL = 'https://mayad.in/';

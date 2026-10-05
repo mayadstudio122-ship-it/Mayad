@@ -38,6 +38,8 @@ export interface AdminLoginPayload {
 export interface AdminAuthResponse {
   success: boolean;
   message: string;
+  step?: string;
+  email?: string;
   token?: string;
   user?: AdminUser;
   admin?: AdminUser;
@@ -231,7 +233,7 @@ export const adminService = {
     return data;
   },
 
-  // 2. LOGIN ADMIN
+  // 2. LOGIN ADMIN (STEP 1: CREDENTIALS)
   login: async (payload: AdminLoginPayload): Promise<AdminAuthResponse> => {
     const response = await fetch(`${ADMIN_API_URL}/login`, {
       method: 'POST',
@@ -249,6 +251,46 @@ export const adminService = {
 
     if (data.token) {
       setAdminToken(data.token);
+    }
+    return data;
+  },
+
+  // 2B. VERIFY ADMIN OTP (STEP 2: OTP)
+  verifyOtp: async (payload: { email: string; otp: string }): Promise<AdminAuthResponse> => {
+    const response = await fetch(`${ADMIN_API_URL}/verify-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'OTP verification failed');
+    }
+
+    if (data.token) {
+      setAdminToken(data.token);
+    }
+    return data;
+  },
+
+  // 2C. RESEND ADMIN OTP
+  resendOtp: async (payload: { email: string }): Promise<{ success: boolean; message: string }> => {
+    const response = await fetch(`${ADMIN_API_URL}/resend-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'Failed to resend OTP');
     }
     return data;
   },

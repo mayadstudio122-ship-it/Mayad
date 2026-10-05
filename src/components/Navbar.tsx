@@ -298,17 +298,17 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* JOIN MAYAD (outline pill, fills gold on hover) */}
+            {/* ARTIST REGISTRATION CTA (Prominent vertical rectangular CTA) */}
             <Link
               href="/register"
-              className={`group inline-flex h-10 items-center gap-1.5 whitespace-nowrap rounded-full border px-4 text-[13px] font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-mayad-gold/60 active:scale-95 ${
+              className={`group inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-xl px-5 text-[13px] font-extrabold tracking-wide uppercase transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-mayad-gold/80 active:scale-95 ${
                 isJoinActive
-                  ? 'border-mayad-gold bg-mayad-gold text-black'
-                  : 'border-mayad-gold/60 text-mayad-gold hover:border-mayad-gold hover:bg-mayad-gold hover:text-black'
+                  ? 'bg-mayad-gold text-black shadow-[0_0_25px_rgba(245,197,24,0.4)]'
+                  : 'bg-mayad-gold text-black shadow-[0_0_20px_rgba(245,197,24,0.25)] hover:bg-yellow-400 hover:shadow-[0_0_30px_rgba(245,197,24,0.5)]'
               }`}
             >
-              <span>Join MAYAD</span>
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <span>Artist Registration</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
 
             {/* ARTIST ACCOUNT */}
@@ -335,12 +335,12 @@ export default function Navbar() {
 
           {/* MOBILE CONTROLS */}
           <div className="flex shrink-0 items-center gap-1.5 md:hidden">
-            {/* MOBILE JOIN */}
+            {/* MOBILE ARTIST REGISTRATION */}
             <Link
               href="/register"
-              className="inline-flex h-8 items-center whitespace-nowrap rounded-full border border-mayad-gold/60 px-3 text-[11px] font-semibold text-mayad-gold transition-all active:scale-95 active:bg-mayad-gold active:text-black"
+              className="inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-mayad-gold px-3 text-[11px] font-extrabold uppercase tracking-wide text-black shadow-[0_0_12px_rgba(245,197,24,0.3)] transition-all active:scale-95 hover:bg-yellow-400"
             >
-              Join
+              Artist Registration
             </Link>
 
             {/* MOBILE LANGUAGE */}
@@ -545,14 +545,14 @@ export default function Navbar() {
               </nav>
             </div>
 
-            {/* MOBILE JOIN (full width, bottom of menu) */}
+            {/* MOBILE ARTIST REGISTRATION (full width, bottom of menu) */}
             <Link
               href="/register"
               onClick={() => setMobileMenuOpen(false)}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-mayad-gold/60 px-4 py-3 text-base font-semibold text-mayad-gold transition-colors hover:bg-mayad-gold hover:text-black active:bg-mayad-gold active:text-black"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 px-5 py-3.5 text-base font-extrabold uppercase tracking-wider text-black shadow-[0_4px_25px_rgba(245,197,24,0.4)] transition-all hover:from-amber-300 hover:to-yellow-400 active:scale-98"
             >
-              <span>Join MAYAD</span>
-              <ArrowUpRight className="h-4 w-4" />
+              <span>Artist Registration</span>
+              <ArrowUpRight className="h-5 w-5" />
             </Link>
           </motion.div>
         )}

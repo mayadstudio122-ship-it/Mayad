@@ -12,7 +12,8 @@ export default function SubscribeModal() {
 
   if (!isSubscribeOpen) return null;
 
-  const isRaj = language === 'RAJ';
+  const isHin = language === 'HIN';
+  const isRaj = isHin;
 
   const handleSubscribe = () => {
     setIsSuccess(true);

@@ -308,7 +308,7 @@ const REAL_CULTURE_ITEMS: CultureItem[] = [
 // ============================================================
 export default function CulturePage() {
   const { language } = useApp();
-  const isRaj = language === 'RAJ';
+  const isRaj = language === 'HIN';
 
   const [activeTab, setActiveTab] = useState<string>('all');
   const [selectedItem, setSelectedItem] = useState<CultureItem | null>(null);

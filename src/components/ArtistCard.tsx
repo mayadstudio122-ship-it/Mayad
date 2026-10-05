@@ -8,7 +8,7 @@ import { useApp } from '@/context/AppContext';
 
 export default function ArtistCard({ artist }: { artist: ArtistItem }) {
   const { language } = useApp();
-  const roleDisplay = language === 'RAJ' ? (artist.role === 'Actor' ? 'अभिनेता' : artist.role) : artist.role;
+  const roleDisplay = language === 'HIN' ? (artist.role === 'Actor' ? 'अभिनेता' : artist.role) : artist.role;
 
   return (
     <motion.div

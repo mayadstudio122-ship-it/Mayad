@@ -26,11 +26,11 @@ export default function BlogSection() {
         {/* Blogs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mt-8">
           {BLOG_POSTS.slice(0, 3).map((blog, idx) => {
-            const isRaj = language === 'RAJ';
-            const title = isRaj ? blog.titleRaj : blog.title;
-            const category = isRaj ? blog.categoryRaj : blog.category;
-            const excerpt = isRaj ? blog.excerptRaj : blog.excerpt;
-            const readTime = isRaj ? blog.readTimeRaj : blog.readTime;
+            const isHin = language === 'HIN';
+            const title = isHin ? (blog.titleRaj || blog.title) : blog.title;
+            const category = isHin ? (blog.categoryRaj || blog.category) : blog.category;
+            const excerpt = isHin ? (blog.excerptRaj || blog.excerpt) : blog.excerpt;
+            const readTime = isHin ? (blog.readTimeRaj || blog.readTime) : blog.readTime;
 
             return (
               <motion.div

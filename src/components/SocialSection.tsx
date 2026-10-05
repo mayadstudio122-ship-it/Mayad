@@ -9,8 +9,12 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { SOCIAL_LINKS } from '@/data/content';
+import { useApp } from '@/context/AppContext';
 
 export default function SocialSection() {
+  const { language } = useApp();
+  const isHin = language === 'HIN';
+
   const socials = [
     {
       name: 'Instagram',
@@ -54,12 +58,13 @@ export default function SocialSection() {
           className="mx-auto max-w-2xl space-y-3"
         >
           <h2 className="text-3xl font-extrabold text-white">
-            Follow MAYAD
+            {isHin ? 'MAYAD को फॉलो करें' : 'Follow MAYAD'}
           </h2>
 
           <p className="text-sm text-mayad-muted">
-            Stay connected with the latest movies, music, stories and updates
-            across our official social channels.
+            {isHin
+              ? 'हमारे आधिकारिक सोशल मीडिया चैनलों पर नवीनतम फिल्मों, संगीत, कहानियों और अपडेट से जुड़े रहें।'
+              : 'Stay connected with the latest movies, music, stories and updates across our official social channels.'}
           </p>
         </motion.div>
 

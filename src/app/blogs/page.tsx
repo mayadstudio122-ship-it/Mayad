@@ -15,7 +15,7 @@ export default function BlogsPage() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const isRaj = language === 'RAJ';
+  const isRaj = language === 'HIN';
 
   useEffect(() => {
     const fetchBlogs = async () => {

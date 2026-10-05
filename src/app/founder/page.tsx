@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useApp } from '@/context/AppContext';
 import {
     ArrowUpRight,
     Instagram,
@@ -586,6 +587,21 @@ function MusicPlayer() {
 }
 
 export default function FounderPage() {
+    const { language } = useApp();
+    const isHin = language === 'HIN';
+
+    const rolesList = ROLES.map(r => ({
+        ...r,
+        label: isHin ? (
+            r.label === 'Filmmaker' ? 'फिल्म निर्माता' :
+            r.label === 'Director' ? 'निर्देशक' :
+            r.label === 'Writer' ? 'लेखक' :
+            r.label === 'Actor' ? 'अभिनेता' :
+            r.label === 'Singer' ? 'गायक' :
+            r.label === 'Producer' ? 'निर्माता' : 'संस्थापक एवं सीईओ'
+        ) : r.label
+    }));
+
     return (
         <main className="min-h-screen overflow-hidden bg-mayad-bg text-white">
             {/* =========================================================
@@ -612,7 +628,7 @@ export default function FounderPage() {
                     <div>
                         <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-mayad-gold/30 bg-mayad-gold/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-mayad-gold">
                             <Crown className="h-4 w-4" />
-                            Founder & CEO · MAYAD
+                            {isHin ? 'संस्थापक और सीईओ · MAYAD' : 'Founder & CEO · MAYAD'}
                         </div>
 
                         <h1 className="max-w-4xl text-5xl font-black leading-[0.95] tracking-tight sm:text-6xl lg:text-8xl">
@@ -621,13 +637,13 @@ export default function FounderPage() {
                         </h1>
 
                         <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-                            Rajasthani filmmaker, director, writer, actor and singer building
-                            a dedicated digital space for Rajasthan&apos;s cinema, language,
-                            culture and stories.
+                            {isHin
+                                ? 'राजस्थानी फिल्म निर्माता, निर्देशक, लेखक, अभिनेता और गायक, जो राजस्थान के सिनेमा, भाषा, संस्कृति और कहानियों के लिए एक समर्पित डिजिटल स्पेस का निर्माण कर रहे हैं।'
+                                : 'Rajasthani filmmaker, director, writer, actor and singer building a dedicated digital space for Rajasthan\'s cinema, language, culture and stories.'}
                         </p>
 
                         <div className="mt-8 flex flex-wrap gap-2.5">
-                            {ROLES.map(({ label, icon: Icon }) => (
+                            {rolesList.map(({ label, icon: Icon }) => (
                                 <span
                                     key={label}
                                     className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-semibold text-slate-200 backdrop-blur-md"
@@ -643,7 +659,7 @@ export default function FounderPage() {
                                 href="#credits"
                                 className="inline-flex items-center gap-2 rounded-full bg-mayad-gold px-5 py-3 text-sm font-bold text-black shadow-glow-gold transition hover:brightness-110"
                             >
-                                Explore Credits
+                                {isHin ? 'क्रेडिट्स देखें' : 'Explore Credits'}
                                 <ArrowUpRight className="h-4 w-4" />
                             </Link>
                         </div>
@@ -666,7 +682,7 @@ export default function FounderPage() {
                                     </p>
                                     <p className="mt-1 text-2xl font-black">DP Singh Basni</p>
                                     <p className="mt-1 text-sm text-slate-300">
-                                        Founder & CEO
+                                        {isHin ? 'संस्थापक एवं सीईओ' : 'Founder & CEO'}
                                     </p>
                                 </div>
                             </div>
@@ -681,45 +697,42 @@ export default function FounderPage() {
             <section className="border-y border-white/5 bg-black/20 py-20">
                 <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
                     <SectionHeading
-                        eyebrow="Professional Profile"
-                        title="A creative voice for Rajasthan"
+                        eyebrow={isHin ? 'व्यावसायिक प्रोफ़ाइल' : 'Professional Profile'}
+                        title={isHin ? 'राजस्थान की एक रचनात्मक आवाज़' : 'A creative voice for Rajasthan'}
                     />
 
                     <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
                         <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
                             <p className="text-base leading-8 text-slate-300">
-                                DP Singh Basni is a Rajasthani filmmaker, director, writer,
-                                actor and singer, and the Founder & CEO of MAYAD Studios /
-                                MAYAD OTT.
+                                {isHin
+                                    ? 'डीपी सिंह बासनी एक राजस्थानी फिल्म निर्माता, निर्देशक, लेखक, अभिनेता और गायक हैं, और मायड़ स्टूडियोज / मायड़ ओटीटी के संस्थापक और सीईओ हैं।'
+                                    : 'DP Singh Basni is a Rajasthani filmmaker, director, writer, actor and singer, and the Founder & CEO of MAYAD Studios / MAYAD OTT.'}
                             </p>
                             <p className="mt-5 text-base leading-8 text-slate-300">
-                                His work focuses on Rajasthan&apos;s language, culture, history,
-                                heritage, folk traditions and regional storytelling. Through
-                                cinema, music and digital media, his creative direction is
-                                centered on giving Rajasthani stories and talent a dedicated
-                                professional platform.
+                                {isHin
+                                    ? 'उनका काम राजस्थान की भाषा, संस्कृति, इतिहास, विरासत, लोक परंपराओं और क्षेत्रीय कहानी कहने पर केंद्रित है। सिनेमा, संगीत और डिजिटल मीडिया के माध्यम से उनका रचनात्मक निर्देशन राजस्थानी कहानियों और प्रतिभा को एक समर्पित व्यावसायिक मंच देने पर केंद्रित है।'
+                                    : 'His work focuses on Rajasthan\'s language, culture, history, heritage, folk traditions and regional storytelling. Through cinema, music and digital media, his creative direction is centered on giving Rajasthani stories and talent a dedicated professional platform.'}
                             </p>
                             <p className="mt-5 text-base leading-8 text-slate-300">
-                                As the founder of MAYAD, he is working toward a broader digital
-                                entertainment ecosystem for Rajasthan — connecting films,
-                                music, artists, emerging talent, cultural storytelling and
-                                digital distribution.
+                                {isHin
+                                    ? 'मायड़ के संस्थापक के रूप में, वह राजस्थान के लिए एक व्यापक डिजिटल मनोरंजन पारिस्थितिकी तंत्र की दिशा में काम कर रहे हैं - जो फिल्मों, संगीत, कलाकारों, उभरती प्रतिभाओं, सांस्कृतिक कहानी कहने और डिजिटल वितरण को जोड़ता है।'
+                                    : 'As the founder of MAYAD, he is working toward a broader digital entertainment ecosystem for Rajasthan — connecting films, music, artists, emerging talent, cultural storytelling and digital distribution.'}
                             </p>
                         </div>
 
                         <div className="rounded-3xl border border-mayad-gold/20 bg-gradient-to-br from-mayad-gold/10 to-transparent p-6 sm:p-8">
                             <p className="text-xs font-bold uppercase tracking-[0.2em] text-mayad-gold">
-                                Professional Name
+                                {isHin ? 'व्यावसायिक नाम' : 'Professional Name'}
                             </p>
                             <h3 className="mt-3 text-3xl font-black">DP Singh Basni</h3>
 
                             <div className="mt-7 space-y-3">
-                                {ROLES.map(({ label }) => (
+                                {rolesList.map(({ label }) => (
                                     <div
                                         key={label}
                                         className="flex items-center justify-between border-b border-white/10 pb-3 text-sm"
                                     >
-                                        <span className="text-slate-400">Role</span>
+                                        <span className="text-slate-400">{isHin ? 'भूमिका' : 'Role'}</span>
                                         <span className="font-semibold text-white">{label}</span>
                                     </div>
                                 ))}
@@ -735,24 +748,24 @@ export default function FounderPage() {
             <section id="credits" className="scroll-mt-24 py-20">
                 <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
                     <SectionHeading
-                        eyebrow="Filmography"
-                        title="Directing, writing & acting credits"
-                        description="Selected professional credits associated with DP Singh Basni."
+                        eyebrow={isHin ? 'फ़िल्मोग्राफी' : 'Filmography'}
+                        title={isHin ? 'निर्देशन, लेखन और अभिनय श्रेय' : 'Directing, writing & acting credits'}
+                        description={isHin ? 'डीपी सिंह बासनी से जुड़े चुनिंदा व्यावसायिक श्रेय।' : 'Selected professional credits associated with DP Singh Basni.'}
                     />
 
                     <div className="grid gap-5 lg:grid-cols-3">
                         <CreditCard
-                            title="Director"
+                            title={isHin ? 'निर्देशक' : 'Director'}
                             items={DIRECTING_CREDITS}
                             icon={Clapperboard}
                         />
                         <CreditCard
-                            title="Writer"
+                            title={isHin ? 'लेखक' : 'Writer'}
                             items={WRITING_CREDITS}
                             icon={PenLine}
                         />
                         <CreditCard
-                            title="Actor"
+                            title={isHin ? 'अभिनेता' : 'Actor'}
                             items={ACTING_CREDITS}
                             icon={PlayCircle}
                         />
@@ -766,9 +779,9 @@ export default function FounderPage() {
             <section className="border-y border-white/5 bg-white/[0.015] py-20">
                 <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
                     <SectionHeading
-                        eyebrow="Music"
-                        title="Singer & music releases"
-                        description="Music associated with DP Singh Basni, including releases and tracks supplied for the professional profile."
+                        eyebrow={isHin ? 'संगीत' : 'Music'}
+                        title={isHin ? 'गायक और संगीत रिलीज़' : 'Singer & music releases'}
+                        description={isHin ? 'डीपी सिंह बासनी से जुड़ा संगीत, जिसमें रिलीज़ और गाने शामिल हैं।' : 'Music associated with DP Singh Basni, including releases and tracks supplied for the professional profile.'}
                     />
 
                     <MusicPlayer />
@@ -776,132 +789,7 @@ export default function FounderPage() {
                 </div>
             </section>
 
-            {/* =========================================================
-          MAYAD
-      ========================================================= */}
-            <section className="py-20">
-                <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
-                    <SectionHeading
-                        eyebrow="MAYAD Studios / MAYAD OTT"
-                        title="Building a digital ecosystem for Rajasthan"
-                        description="A platform created around Rajasthani cinema, language, culture and emerging creative talent."
-                    />
 
-                    <div className="grid gap-5 lg:grid-cols-2">
-                        <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
-                            <h3 className="text-2xl font-black text-white">
-                                Why MAYAD was created
-                            </h3>
-
-                            <p className="mt-5 text-sm leading-7 text-slate-400 sm:text-base">
-                                Rajasthan has a rich history, language, culture, folk
-                                traditions and storytelling heritage. MAYAD was created to
-                                provide Rajasthani creators and stories with a dedicated
-                                digital identity and professional space.
-                            </p>
-
-                            <ul className="mt-6 space-y-3">
-                                {[
-                                    'Give Rajasthani cinema its own digital identity',
-                                    'Promote and preserve the Rajasthani language and culture',
-                                    'Provide a platform for filmmakers and artists',
-                                    'Discover and develop new actors, writers, directors and technicians',
-                                    'Connect young audiences with Rajasthan’s language and culture',
-                                    'Take Rajasthani stories and cinema to audiences across India and internationally',
-                                    'Build a sustainable Rajasthani entertainment and film ecosystem',
-                                ].map((item) => (
-                                    <li key={item} className="flex gap-3 text-sm leading-6 text-slate-300">
-                                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-mayad-gold" />
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div className="rounded-3xl border border-mayad-gold/20 bg-gradient-to-br from-mayad-gold/10 via-transparent to-transparent p-6 sm:p-8">
-                            <h3 className="text-2xl font-black text-white">
-                                Future vision
-                            </h3>
-
-                            <p className="mt-5 text-sm leading-7 text-slate-400 sm:text-base">
-                                The long-term vision is to build a complete digital
-                                entertainment ecosystem for Rajasthan.
-                            </p>
-
-                            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                                {[
-                                    'Rajasthani feature films',
-                                    'Short films',
-                                    'Web series',
-                                    'Original music',
-                                    'Cultural & historical stories',
-                                    'New talent discovery',
-                                    'Acting workshops & auditions',
-                                    'Film production',
-                                    'Digital distribution',
-                                    'Opportunities for emerging artists & technicians',
-                                ].map((item) => (
-                                    <div
-                                        key={item}
-                                        className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-slate-300"
-                                    >
-                                        {item}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* =========================================================
-          REACH
-      ========================================================= */}
-            <section className="border-t border-white/5 bg-black/20 py-20">
-                <div className="mx-auto w-full max-w-4xl px-5 sm:px-8 lg:px-10">
-                    <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
-                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-mayad-gold">
-                            MAYAD Reach
-                        </p>
-                        <div className="mt-3 flex items-end gap-3">
-                            <span className="text-5xl font-black text-white sm:text-6xl">
-                                7,000+
-                            </span>
-                            <span className="pb-2 text-sm text-slate-400">
-                                current internal download milestone
-                            </span>
-                        </div>
-
-                        <p className="mt-5 text-sm leading-7 text-slate-400">
-                            MAYAD is available on Android and iOS. The public Google Play
-                            listing may display a different rounded download counter;
-                            7,000+ is presented here as the current internal milestone.
-                        </p>
-
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <a
-                                href="https://play.google.com/store/apps/details?id=com.mayad.app"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
-                            >
-                                <Smartphone className="h-4 w-4 text-mayad-gold" />
-                                Google Play
-                            </a>
-
-                            <a
-                                href="https://apps.apple.com/in/app/mayad/id6759036727"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
-                            >
-                                <Smartphone className="h-4 w-4 text-mayad-gold" />
-                                App Store
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* =========================================================
           BIO
@@ -909,7 +797,7 @@ export default function FounderPage() {
             <section className="py-20">
                 <div className="mx-auto w-full max-w-5xl px-5 text-center sm:px-8">
                     <p className="text-xs font-bold uppercase tracking-[0.28em] text-mayad-gold">
-                        Professional Biography
+                        {isHin ? 'व्यावसायिक जीवनी' : 'Professional Biography'}
                     </p>
 
                     <h2 className="mt-4 text-3xl font-black sm:text-4xl">
@@ -917,17 +805,9 @@ export default function FounderPage() {
                     </h2>
 
                     <p className="mx-auto mt-7 max-w-4xl text-sm leading-8 text-slate-400 sm:text-base">
-                        DP Singh Basni is a Rajasthani filmmaker, director, writer, actor
-                        and singer, and the Founder & CEO of MAYAD Studios / MAYAD OTT. He
-                        has directed and written Rajasthani films including Maa Hadi Rani,
-                        Maa Padmavati, Sanwariya Seth, Sanwariya Seth 2 and Vadlya Hindva.
-                        He has also acted in Sanwariya Seth and Vadlya Hindva. As a singer,
-                        he has released multiple Rajasthani and Hindi music projects under
-                        the professional name DP Singh Basni. Through MAYAD, his broader
-                        creative vision is focused on building a dedicated digital
-                        ecosystem for Rajasthani cinema, music, language, culture, artists
-                        and emerging talent, with the aim of taking Rajasthan&apos;s
-                        stories to audiences across India and internationally.
+                        {isHin
+                            ? 'डीपी सिंह बासनी एक राजस्थानी फिल्म निर्माता, निर्देशक, लेखक, अभिनेता और गायक हैं, और MAYAD Studios / MAYAD OTT के संस्थापक और सीईओ हैं। उन्होंने मां हाड़ी रानी, मां पद्मावती, सांवरिया सेठ, सांवरिया सेठ 2 और वाडलिया हिंदवा सहित राजस्थानी फिल्मों का निर्देशन और लेखन किया है। उन्होंने सांवरिया सेठ और वाडलिया हिंदवा में भी अभिनय किया है। एक गायक के रूप में, उन्होंने डीपी सिंह बासनी के नाम से कई राजस्थानी और हिंदी संगीत प्रोजेक्ट जारी किए हैं। MAYAD के माध्यम से, उनका व्यापक दृष्टिकोण राजस्थानी सिनेमा, संगीत, भाषा, संस्कृति, कलाकारों और उभरती प्रतिभाओं के लिए एक समर्पित डिजिटल इकोसिस्टम बनाना है।'
+                            : 'DP Singh Basni is a Rajasthani filmmaker, director, writer, actor and singer, and the Founder & CEO of MAYAD Studios / MAYAD OTT. He has directed and written Rajasthani films including Maa Hadi Rani, Maa Padmavati, Sanwariya Seth, Sanwariya Seth 2 and Vadlya Hindva. He has also acted in Sanwariya Seth and Vadlya Hindva. As a singer, he has released multiple Rajasthani and Hindi music projects under the professional name DP Singh Basni. Through MAYAD, his broader creative vision is focused on building a dedicated digital ecosystem for Rajasthani cinema, music, language, culture, artists and emerging talent, with the aim of taking Rajasthan\'s stories to audiences across India and internationally.'}
                     </p>
                     <div className="mt-9 flex flex-wrap justify-center gap-3">
                         {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
@@ -949,3 +829,4 @@ export default function FounderPage() {
         </main>
     );
 }
+

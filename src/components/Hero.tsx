@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Play, ChevronDown, ArrowUpRight } from "lucide-react";
+import { Play, ArrowUpRight } from "lucide-react";
 
 import { MAYAD_OFFICIAL_URL } from "@/utils/config";
 
@@ -139,23 +139,6 @@ export default function Hero() {
 
           <span>Explore MAYAD</span>
         </a>
-
-      </div>
-
-      {/* Scroll Down Indicator */}
-      <div className="absolute bottom-3 left-1/2 z-10 hidden -translate-x-1/2 cursor-pointer flex-col items-center gap-1 opacity-80 transition-opacity hover:opacity-100 sm:flex">
-
-        <div className="flex h-6 w-3.5 justify-center rounded-full border-2 border-white/80 pt-1 shadow-md sm:h-7 sm:w-4">
-
-          <div className="h-1.5 w-0.5 animate-bounce rounded-full bg-white" />
-
-        </div>
-
-        <span className="text-[9px] font-semibold uppercase tracking-widest text-white/90 drop-shadow-md sm:text-[10px]">
-          Scroll Down
-        </span>
-
-        <ChevronDown className="-mt-0.5 h-3 w-3 animate-bounce text-white/90 sm:h-3.5 sm:w-3.5" />
 
       </div>
 

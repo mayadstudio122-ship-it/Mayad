@@ -111,6 +111,12 @@ export default function AdminDashboardPage() {
   // Admin Profile Update State
   const [editEmail, setEditEmail] = useState('');
   const [emailUpdating, setEmailUpdating] = useState(false);
+  const [emailOtpModalOpen, setEmailOtpModalOpen] = useState(false);
+  const [pendingNewEmail, setPendingNewEmail] = useState('');
+  const [emailOtp, setEmailOtp] = useState('');
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpSending, setOtpSending] = useState(false);
+
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -128,24 +134,77 @@ export default function AdminDashboardPage() {
       showToast('Email address cannot be empty', 'error');
       return;
     }
+    if (editEmail.trim().toLowerCase() === adminUser?.email?.toLowerCase()) {
+      showToast('Please enter a new email address to update', 'error');
+      return;
+    }
     try {
       setEmailUpdating(true);
-      const res = await adminService.updateProfile({ email: editEmail.trim() });
-      if (res.success && res.admin) {
-        setAdminUser(res.admin as AdminUser);
-        showToast('Email address updated successfully!');
+      const newEmail = editEmail.trim();
+      const res = await adminService.requestEmailUpdate(newEmail);
+      if (res.success) {
+        setPendingNewEmail(newEmail);
+        setEmailOtp('');
+        setEmailOtpModalOpen(true);
+        showToast(res.message || `OTP sent to ${newEmail}`);
       } else {
-        showToast(res.message || 'Failed to update email address', 'error');
+        showToast(res.message || 'Failed to send OTP to new email', 'error');
       }
     } catch (err: any) {
-      showToast(err?.message || 'Failed to update email address', 'error');
+      showToast(err?.message || 'Failed to request email update', 'error');
     } finally {
       setEmailUpdating(false);
     }
   };
 
+  const handleResendEmailOtp = async () => {
+    if (!pendingNewEmail) return;
+    try {
+      setOtpSending(true);
+      const res = await adminService.requestEmailUpdate(pendingNewEmail);
+      if (res.success) {
+        showToast(`OTP resent to ${pendingNewEmail}!`);
+      } else {
+        showToast(res.message || 'Failed to resend OTP', 'error');
+      }
+    } catch (err: any) {
+      showToast(err?.message || 'Failed to resend OTP', 'error');
+    } finally {
+      setOtpSending(false);
+    }
+  };
+
+  const handleVerifyEmailOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailOtp || emailOtp.trim().length !== 6) {
+      showToast('Please enter the 6-digit OTP sent to your new email', 'error');
+      return;
+    }
+    try {
+      setOtpVerifying(true);
+      const res = await adminService.verifyEmailUpdate(pendingNewEmail, emailOtp.trim());
+      if (res.success && res.admin) {
+        setAdminUser(res.admin as AdminUser);
+        showToast('Email address updated successfully!');
+        setEmailOtpModalOpen(false);
+        setEmailOtp('');
+        setPendingNewEmail('');
+      } else {
+        showToast(res.message || 'Failed to verify OTP', 'error');
+      }
+    } catch (err: any) {
+      showToast(err?.message || 'Failed to verify OTP', 'error');
+    } finally {
+      setOtpVerifying(false);
+    }
+  };
+
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentPassword || !currentPassword.trim()) {
+      showToast('Current Password is required', 'error');
+      return;
+    }
     if (!newPassword) {
       showToast('New Password is required', 'error');
       return;
@@ -978,9 +1037,10 @@ export default function AdminDashboardPage() {
 
                 <form onSubmit={handleUpdatePassword} className="space-y-4 text-xs sm:text-sm">
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Current Password (Optional)</label>
+                    <label className="block text-slate-300 font-bold mb-1">Current Password *</label>
                     <input
                       type="password"
+                      required
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="Enter current password"
@@ -1408,6 +1468,92 @@ export default function AdminDashboardPage() {
                   )}
                 </button>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Email Update OTP Verification Modal */}
+      <AnimatePresence>
+        {emailOtpModalOpen && (
+          <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-[#090d1f] border border-amber-500/30 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 relative z-10"
+            >
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Verify New Email</h3>
+                    <p className="text-xs text-slate-400">OTP sent to: <span className="text-amber-300 font-semibold">{pendingNewEmail}</span></p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEmailOtpModalOpen(false)}
+                  className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleVerifyEmailOtp} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-slate-300 mb-2">
+                    Enter 6-Digit OTP *
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    required
+                    value={emailOtp}
+                    onChange={(e) => setEmailOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="123456"
+                    className="w-full bg-slate-900 border border-amber-500/30 rounded-xl px-4 py-3 text-center text-xl font-mono tracking-widest text-amber-400 placeholder-slate-600 focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <span className="text-slate-400">Didn't receive code?</span>
+                  <button
+                    type="button"
+                    onClick={handleResendEmailOtp}
+                    disabled={otpSending}
+                    className="text-amber-400 hover:underline font-bold disabled:opacity-50 cursor-pointer"
+                  >
+                    {otpSending ? 'Resending...' : 'Resend OTP'}
+                  </button>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setEmailOtpModalOpen(false)}
+                    className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 font-semibold text-xs sm:text-sm cursor-pointer transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={otpVerifying}
+                    className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 cursor-pointer transition-all hover:scale-[1.02] active:scale-95"
+                  >
+                    {otpVerifying ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Verifying...</span>
+                      </>
+                    ) : (
+                      <span>Verify & Update</span>
+                    )}
+                  </button>
+                </div>
+              </form>
             </motion.div>
           </div>
         )}

@@ -342,8 +342,56 @@ export const adminService = {
     return data;
   },
 
+  // 3B-1. REQUEST ADMIN EMAIL UPDATE (SEND OTP)
+  requestEmailUpdate: async (newEmail: string): Promise<{ success: boolean; message: string; pendingEmail?: string }> => {
+    const token = getAdminToken();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${ADMIN_API_URL}/request-email-update`, {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ newEmail }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'Failed to request email update OTP');
+    }
+    return data;
+  },
+
+  // 3B-2. VERIFY ADMIN EMAIL UPDATE OTP
+  verifyEmailUpdate: async (newEmail: string, otp: string): Promise<AdminAuthResponse> => {
+    const token = getAdminToken();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${ADMIN_API_URL}/verify-email-update`, {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ newEmail, otp }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'Failed to verify email update OTP');
+    }
+    return data;
+  },
+
   // 3C. UPDATE ADMIN PASSWORD
-  updatePassword: async (payload: { currentPassword?: string; newPassword: string }): Promise<{ success: boolean; message: string }> => {
+  updatePassword: async (payload: { currentPassword: string; newPassword: string }): Promise<{ success: boolean; message: string }> => {
     const token = getAdminToken();
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',

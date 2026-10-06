@@ -2,9 +2,8 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Star, ChevronRight } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 import { POPULAR_PERSONALITIES } from '@/data/content';
 import { useApp } from '@/context/AppContext';
@@ -96,10 +95,7 @@ export default function PopularPersonalities() {
               className="min-w-0"
             >
 
-              <Link
-                href={`/artists/${person.id}`}
-                className="group flex min-w-0 flex-col items-center text-center outline-none"
-              >
+              <div className="group flex min-w-0 flex-col items-center text-center">
 
                 {/* =================================================
                     IMAGE
@@ -163,40 +159,6 @@ export default function PopularPersonalities() {
                     "
                   />
 
-
-                  {/* Open Icon */}
-
-                  <div
-                    className="
-                      absolute
-                      bottom-0.5
-                      right-0.5
-                      flex
-                      h-4
-                      w-4
-                      scale-75
-                      items-center
-                      justify-center
-                      rounded-full
-                      border
-                      border-white/20
-                      bg-black/75
-                      text-white
-                      opacity-0
-                      backdrop-blur-md
-                      transition-all
-                      duration-300
-                      group-hover:scale-100
-                      group-hover:opacity-100
-                      sm:bottom-2
-                      sm:right-2
-                      sm:h-7
-                      sm:w-7
-                    "
-                  >
-                    <ChevronRight className="h-2.5 w-2.5 sm:h-4 sm:w-4" />
-                  </div>
-
                 </div>
 
 
@@ -249,7 +211,7 @@ export default function PopularPersonalities() {
                   {displayRole}
                 </p>
 
-              </Link>
+              </div>
 
             </motion.div>
 

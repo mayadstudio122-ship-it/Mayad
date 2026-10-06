@@ -83,13 +83,13 @@ export function AppProvider({
   // ==========================================================
 
   const [language, setLanguageState] =
-    useState<Language>('ENG');
+    useState<Language>('HIN');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedLang =
         localStorage.getItem(
-          'mayad_language'
+          'mayad_language_v2'
         ) as Language;
 
       if (
@@ -97,6 +97,10 @@ export function AppProvider({
         savedLang === 'HIN'
       ) {
         setLanguageState(savedLang);
+      } else {
+        setLanguageState('HIN');
+        localStorage.setItem('mayad_language_v2', 'HIN');
+        localStorage.setItem('mayad_language', 'HIN');
       }
     }
   }, []);
@@ -105,6 +109,10 @@ export function AppProvider({
     setLanguageState(lang);
 
     if (typeof window !== 'undefined') {
+      localStorage.setItem(
+        'mayad_language_v2',
+        lang
+      );
       localStorage.setItem(
         'mayad_language',
         lang

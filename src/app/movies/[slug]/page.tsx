@@ -8,8 +8,6 @@ import { motion } from 'framer-motion';
 
 import {
   Play,
-  Plus,
-  Check,
   Calendar,
 } from 'lucide-react';
 
@@ -28,8 +26,6 @@ export default function MovieDetailPage() {
 
   const {
     playVideo,
-    toggleMyList,
-    isInMyList,
   } = useApp();
 
   const [movie, setMovie] = useState<any>(() => MOVIES_LIST.find((item) => item.slug === slug) || null);
@@ -91,7 +87,6 @@ export default function MovieDetailPage() {
   }
 
   const movieId = movie._id || movie.id || movie.slug;
-  const isSaved = isInMyList(movieId);
 
   // ============================================================
   // CAST MEMBERS
@@ -380,10 +375,7 @@ export default function MovieDetailPage() {
 
                       {person.id ? (
 
-                        <Link
-                          href={`/artists/${person.id}`}
-                          className="block"
-                        >
+                        <div className="block">
 
                           {/* ARTIST IMAGE */}
 
@@ -403,7 +395,7 @@ export default function MovieDetailPage() {
                             {person.name}
                           </p>
 
-                        </Link>
+                        </div>
 
                       ) : (
 
@@ -460,7 +452,7 @@ export default function MovieDetailPage() {
 
 
               <Link
-                href="/about#director"
+                href="/founder"
                 className="group inline-block"
               >
 
@@ -554,31 +546,6 @@ export default function MovieDetailPage() {
                 <Play className="h-4 w-4 fill-current" />
                 Watch Now
               </a>
-
-
-              {/* MY LIST */}
-
-              <button
-                onClick={() => toggleMyList(movie.id)}
-                className={`flex items-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition-all ${isSaved
-                  ? 'border-mayad-gold bg-mayad-gold/20 text-mayad-gold'
-                  : 'border-white/15 bg-white/10 text-white hover:bg-white/20'
-                  }`}
-              >
-
-                {isSaved ? (
-                  <>
-                    <Check className="h-4 w-4" />
-                    In My List
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4" />
-                    My List
-                  </>
-                )}
-
-              </button>
 
             </div>
 

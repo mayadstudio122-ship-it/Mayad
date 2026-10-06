@@ -4,13 +4,12 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Play, Plus, Check } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { ContentItem } from '@/data/content';
 import { useApp } from '@/context/AppContext';
 
 export default function MovieCard({ item }: { item: ContentItem }) {
-  const { playVideo, toggleMyList, isInMyList, language, t } = useApp();
-  const isSaved = isInMyList(item.id);
+  const { playVideo, language, t } = useApp();
 
   const getValidImageUrl = (url?: string) => {
     if (!url || typeof url !== 'string') return 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=800&auto=format&fit=crop';
@@ -55,22 +54,6 @@ export default function MovieCard({ item }: { item: ContentItem }) {
             </span>
           )}
         </div>
-
-        {/* My List Bookmark Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleMyList(item.id);
-          }}
-          className={`absolute top-2.5 right-2.5 z-10 p-2 rounded-full backdrop-blur-md border transition-all ${
-            isSaved
-              ? 'bg-mayad-gold text-black border-mayad-gold'
-              : 'bg-black/60 text-white border-white/20 hover:bg-white/20'
-          }`}
-          title={isSaved ? 'Remove from My List' : 'Add to My List'}
-        >
-          {isSaved ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-        </button>
 
         {/* Play Icon Hover Overlay */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px]">

@@ -215,43 +215,53 @@ export default function Navbar() {
           </div>
 
           {/* MOBILE CONTROLS */}
-          <div className="flex shrink-0 items-center gap-1.5 md:hidden">
-            {/* MOBILE ARTIST REGISTRATION */}
-            <Link
-              href="/register"
-              className="inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-mayad-gold px-3 text-[11px] font-extrabold uppercase tracking-wide text-black shadow-[0_0_12px_rgba(245,197,24,0.3)] transition-all active:scale-95 hover:bg-yellow-400"
-            >
-              {language === 'HIN' ? 'आर्टिस्ट रजिस्ट्रेशन' : 'Artist Registration'}
-            </Link>
-
+          <div className="flex shrink-0 items-center gap-2 md:hidden">
             {/* MOBILE LANGUAGE */}
-            <button
-              onClick={() => setLanguage(language === 'ENG' ? 'HIN' : 'ENG')}
-              className="max-w-[52px] truncate whitespace-nowrap rounded-full border border-white/15 bg-white/10 px-2 py-1 text-[10px] font-bold text-mayad-gold transition-all hover:bg-white/20 sm:max-w-none sm:px-2.5 sm:text-xs"
-              title="Toggle Language"
-            >
-              {language === 'ENG' ? 'ENG' : 'हिंदी'}
-            </button>
+            <div className="relative flex items-center rounded-full border border-white/15 bg-black/40 p-0.5 text-[11px] font-bold text-white shadow-inner backdrop-blur-md">
+              <button
+                onClick={() => setLanguage('ENG')}
+                className={`rounded-full px-2.5 py-0.5 transition-all duration-200 ${
+                  language === 'ENG'
+                    ? 'bg-mayad-gold font-extrabold text-black shadow-glow-gold'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+                title="English"
+              >
+                ENG
+              </button>
+              <button
+                onClick={() => setLanguage('HIN')}
+                className={`rounded-full px-2.5 py-0.5 transition-all duration-200 ${
+                  language === 'HIN'
+                    ? 'bg-mayad-gold font-extrabold text-black shadow-glow-gold'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+                title="हिंदी"
+              >
+                हिंदी
+              </button>
+            </div>
 
             {/* MOBILE SEARCH */}
             <button
               onClick={openSearch}
-              className="flex h-9 w-9 shrink-0 items-center justify-center text-slate-200 hover:text-mayad-gold"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 border border-white/15 text-slate-200 transition-all hover:text-mayad-gold hover:border-mayad-gold/50 active:scale-95"
               aria-label="Search"
+              title="Search"
             >
-              <Search className="h-5 w-5" />
+              <Search className="h-4 w-4" />
             </button>
 
             {/* MOBILE MENU TOGGLE */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center text-slate-200 hover:text-white focus:outline-none"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mayad-gold text-black shadow-[0_0_15px_rgba(245,197,24,0.4)] transition-all hover:scale-105 active:scale-95"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? (
-                <X className="h-6 w-6 text-mayad-gold" />
+                <X className="h-5 w-5 stroke-[2.5]" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5 stroke-[2.5]" />
               )}
             </button>
           </div>
@@ -259,58 +269,61 @@ export default function Navbar() {
       </header>
 
       {/* ========================================================
-          MOBILE MENU
+          MOBILE MENU DRAWER
       ======================================================== */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex w-full min-w-0 flex-col justify-between overflow-x-hidden overflow-y-auto bg-black/95 p-4 backdrop-blur-xl sm:p-6 md:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[200] flex w-full flex-col justify-between overflow-y-auto bg-[#070A14]/98 p-5 backdrop-blur-2xl md:hidden"
           >
-            <div className="min-w-0">
-              {/* MOBILE HEADER */}
-              <div className="mb-5 flex min-w-0 items-center justify-between gap-3 border-b border-white/10 pb-4">
-                <div className="relative h-8 w-24 shrink-0 sm:h-9 sm:w-28">
+            <div>
+              {/* MOBILE DRAWER HEADER */}
+              <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="relative h-9 w-32 shrink-0">
                   <Image
-                    src="/mayad.jpg"
-                    alt="MAYAD"
+                    src="/mayadlogo.jpg"
+                    alt="MAYAD Logo"
                     fill
+                    sizes="150px"
                     className="object-contain object-left"
                   />
                 </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-slate-300 hover:text-mayad-gold"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300 hover:text-mayad-gold hover:bg-white/20 transition-all"
+                  aria-label="Close menu"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* MOBILE LANGUAGE SWITCHER */}
-              <div className="mb-5 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+              <div className="mb-5 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-3.5 shadow-lg">
+                <span className="flex items-center gap-2 text-xs font-bold text-slate-300">
                   <Globe className="h-4 w-4 text-mayad-gold" />
                   <span>{t('languageLabel')}:</span>
                 </span>
-                <div className="flex items-center rounded-full border border-white/15 bg-black/50 p-0.5 text-xs font-bold">
+                <div className="flex items-center rounded-full border border-white/15 bg-black/60 p-1 text-xs font-bold shadow-inner">
                   <button
                     onClick={() => setLanguage('ENG')}
-                    className={`rounded-full px-3 py-1 transition-all ${
+                    className={`rounded-full px-3.5 py-1 transition-all ${
                       language === 'ENG'
                         ? 'bg-mayad-gold font-extrabold text-black shadow-glow-gold'
-                        : 'text-slate-300'
+                        : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     ENG
                   </button>
                   <button
                     onClick={() => setLanguage('HIN')}
-                    className={`rounded-full px-3 py-1 transition-all ${
+                    className={`rounded-full px-3.5 py-1 transition-all ${
                       language === 'HIN'
                         ? 'bg-mayad-gold font-extrabold text-black shadow-glow-gold'
-                        : 'text-slate-300'
+                        : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     हिंदी
@@ -318,9 +331,8 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {/* MOBILE LINKS */}
-              <nav className="flex min-w-0 flex-col space-y-2.5">
-                {/* NORMAL LINKS */}
+              {/* MOBILE NAV LINKS */}
+              <nav className="flex flex-col space-y-1">
                 {navLinks.map((link) => {
                   const isActive = pathname === link.href;
                   return (
@@ -328,28 +340,31 @@ export default function Navbar() {
                       key={link.name}
                       href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`w-full min-w-0 break-words rounded-xl px-4 py-3 text-base font-semibold leading-6 transition-colors ${
+                      className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-bold transition-all ${
                         isActive
-                          ? 'bg-mayad-gold text-black'
+                          ? 'bg-mayad-gold text-black shadow-glow-gold'
                           : 'text-slate-200 hover:bg-white/10 hover:text-mayad-gold'
                       }`}
                     >
-                      {link.name}
+                      <span>{link.name}</span>
+                      {isActive && <div className="h-2 w-2 rounded-full bg-black" />}
                     </Link>
                   );
                 })}
               </nav>
             </div>
 
-            {/* MOBILE ARTIST REGISTRATION (full width, bottom of menu) */}
-            <Link
-              href="/register"
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 px-5 py-3.5 text-base font-extrabold uppercase tracking-wider text-black shadow-[0_4px_25px_rgba(245,197,24,0.4)] transition-all hover:from-amber-300 hover:to-yellow-400 active:scale-98"
-            >
-              <span>{language === 'HIN' ? 'आर्टिस्ट रजिस्ट्रेशन' : 'Artist Registration'}</span>
-              <ArrowUpRight className="h-5 w-5" />
-            </Link>
+            {/* MOBILE ARTIST REGISTRATION CTA */}
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <Link
+                href="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 px-5 py-3.5 text-base font-extrabold uppercase tracking-wider text-black shadow-[0_4px_25px_rgba(245,197,24,0.4)] transition-all hover:scale-[1.02] active:scale-95"
+              >
+                <span>{language === 'HIN' ? 'आर्टिस्ट रजिस्ट्रेशन' : 'Artist Registration'}</span>
+                <ArrowUpRight className="h-5 w-5 stroke-[2.5]" />
+              </Link>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

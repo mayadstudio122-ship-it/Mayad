@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   CalendarDays,
   Settings,
-  Bookmark,
   PlaySquare,
   CreditCard,
   Tv,
@@ -566,14 +565,7 @@ export default function ProfilePage() {
           </div>
 
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
-            <QuickAction
-              href="/watchlist"
-              icon={<Bookmark className="h-5 w-5" />}
-              title="My Watchlist"
-              description="Saved movies"
-            />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
 
             <QuickAction

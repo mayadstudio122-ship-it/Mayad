@@ -25,8 +25,8 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/90" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_45%,_var(--tw-gradient-stops))] from-black/50 via-transparent to-black/65" />
 
-      {/* Hero Content */}
-      <div className="relative z-10 mx-auto flex w-full max-w-[1500px] items-center justify-center px-4 pt-12 pb-36 sm:px-8 sm:pt-16 sm:pb-32 lg:justify-end lg:pb-28 lg:pr-16 xl:pr-24">
+      {/* Hero Content (Heading & Subtext Column) */}
+      <div className="relative z-10 mx-auto flex w-full max-w-[1500px] items-center justify-center px-4 pt-12 pb-24 sm:px-8 sm:pt-16 sm:pb-28 lg:justify-end lg:pb-28 lg:pr-16 xl:pr-24">
         <div className="flex w-full max-w-xl flex-col items-center text-center lg:w-[60%] lg:max-w-none xl:w-[56%]">
 
           {/* Subtitle Badge */}
@@ -70,30 +70,32 @@ export default function Hero() {
           <p className="mt-3 max-w-md text-center text-[11px] font-medium leading-relaxed text-white/95 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] sm:mt-4 sm:max-w-xl sm:text-sm sm:leading-relaxed md:text-base">
             राजस्थान री माटी, मायड़ री भाषा अर आपणी संस्कृति ने दुनिया तक पहुंचावां। आओ, एक साथ मिलकर राजस्थान री कला, हुनर अर कहाणी ने नवी पहचान देवां।
           </p>
-
-          {/* Action Buttons */}
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:mt-7 sm:gap-5">
-            <Link
-              href="/register"
-              className="group inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-[#ffca28] via-[#ffd54f] to-[#ffb300] px-5 py-3 text-xs font-extrabold text-black shadow-[0_0_24px_rgba(255,202,40,0.6)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_35px_rgba(255,202,40,0.85)] sm:gap-2 sm:px-8 sm:py-4 sm:text-base"
-            >
-              <span>Join the Movement</span>
-              <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-4 sm:w-4" />
-            </Link>
-
-            <a
-              href={MAYAD_OFFICIAL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-white/40 bg-black/40 px-5 py-3 text-xs font-bold text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-yellow-400 hover:bg-black/60 sm:gap-3 sm:px-8 sm:py-4 sm:text-base"
-            >
-              <span className="flex h-5 w-5 items-center justify-center rounded-full border border-white/80 bg-white/10 transition-colors group-hover:border-yellow-400 group-hover:text-yellow-400 sm:h-6 sm:w-6">
-                <Play className="ml-0.5 h-2.5 w-2.5 fill-current sm:h-3 sm:w-3" />
-              </span>
-              <span>Explore MAYAD</span>
-            </a>
-          </div>
         </div>
+      </div>
+
+      {/* Hero Action CTA Buttons — Lower Left Area (Red-Circled Area in Reference) */}
+      <div className="relative z-20 mt-4 flex flex-wrap items-center justify-center gap-3 px-4 pb-20 sm:gap-4 lg:absolute lg:bottom-10 lg:left-8 xl:left-16 lg:mt-0 lg:p-0 lg:justify-start">
+        {/* Primary Yellow Gold CTA: Artist Registration ↗ */}
+        <Link
+          href="/register"
+          className="group inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-[#ffca28] via-[#ffd54f] to-[#ffb300] px-5 py-3 text-xs font-extrabold text-black shadow-[0_0_24px_rgba(255,202,40,0.6)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_35px_rgba(255,202,40,0.85)] sm:gap-2 sm:px-7 sm:py-3.5 sm:text-sm md:text-base"
+        >
+          <span>Artist Registration</span>
+          <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-4 sm:w-4" />
+        </Link>
+
+        {/* Secondary Dark Outlined CTA: Explore MAYAD */}
+        <a
+          href={MAYAD_OFFICIAL_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-white/40 bg-black/40 px-5 py-3 text-xs font-bold text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-yellow-400 hover:bg-black/60 sm:gap-3 sm:px-7 sm:py-3.5 sm:text-sm md:text-base"
+        >
+          <span className="flex h-5 w-5 items-center justify-center rounded-full border border-white/80 bg-white/10 transition-colors group-hover:border-yellow-400 group-hover:text-yellow-400 sm:h-6 sm:w-6">
+            <Play className="ml-0.5 h-2.5 w-2.5 fill-current sm:h-3 sm:w-3" />
+          </span>
+          <span>Explore MAYAD</span>
+        </a>
       </div>
 
       {/* Scroll Down Indicator */}

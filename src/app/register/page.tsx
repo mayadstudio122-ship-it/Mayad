@@ -532,12 +532,17 @@ export default function RegisterPage() {
     }
 
     if (stepObj.key === 'step-social') {
-      if (!isValidUrl(socialLink1)) {
+      if (!socialLink1.trim()) {
+        e.socialLink1 = isHin
+          ? 'कम से कम एक सोशल मीडिया लिंक (जैसे: इंस्टाग्राम या यूट्यूब) आवश्यक है'
+          : 'At least one social media profile link (e.g. Instagram or YouTube) is required';
+      } else if (!isValidUrl(socialLink1)) {
         e.socialLink1 = isHin
           ? 'http:// या https:// से शुरू होने वाला एक वैध लिंक दर्ज करें'
           : 'Enter a valid link starting with http:// or https://';
       }
-      if (!isValidUrl(socialLink2)) {
+
+      if (socialLink2.trim() && !isValidUrl(socialLink2)) {
         e.socialLink2 = isHin
           ? 'http:// या https:// से शुरू होने वाला एक वैध लिंक दर्ज करें'
           : 'Enter a valid link starting with http:// or https://';
@@ -889,7 +894,16 @@ export default function RegisterPage() {
 
         {/* MAIN MULTI-STEP FORM */}
         {!submitSuccess && (
-          <form onSubmit={handleSubmit} noValidate className="space-y-8">
+          <form
+            onSubmit={handleSubmit}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
+                e.preventDefault();
+              }
+            }}
+            noValidate
+            className="space-y-8"
+          >
             {/* GLOBAL STEP ERROR ALERT */}
             {formError && (
               <div
@@ -1519,7 +1533,7 @@ export default function RegisterPage() {
                   }
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Field id="socialLink1" label={isHin ? 'सोशल मीडिया लिंक 1 (इंस्टाग्राम/यूट्यूब)' : 'Social media link 1 (Instagram/YouTube)'} error={errors.socialLink1}>
+                    <Field id="socialLink1" label={isHin ? 'सोशल मीडिया लिंक 1 (इंस्टाग्राम/यूट्यूब)' : 'Social media link 1 (Instagram/YouTube)'} required error={errors.socialLink1}>
                       <input
                         id="socialLink1"
                         type="url"

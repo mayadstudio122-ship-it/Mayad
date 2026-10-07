@@ -13,7 +13,7 @@ export const getBackendUrl = (): string => {
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     return 'http://localhost:5000';
   }
-  return 'https://mayad-backend.vercel.app';
+  return 'https://mayad-backend-mu.vercel.app';
 };
 
 export const getApiBaseUrl = (): string => {

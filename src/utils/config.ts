@@ -4,11 +4,11 @@
 // ============================================================
 
 export const getBackendUrl = (): string => {
-  if (process.env.API_URL) {
-    return process.env.API_URL.replace(/\/$/, '');
+  if (process.env.NEXT_PUBLIC_BACKEND_URL) {
+    return process.env.NEXT_PUBLIC_BACKEND_URL.replace(/\/$/, '');
   }
-  if (process.env.API_URL) {
-    return process.env.API_URL.replace(/\/api\/?$/, '').replace(/\/$/, '');
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, '').replace(/\/$/, '');
   }
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     return 'http://localhost:5000';

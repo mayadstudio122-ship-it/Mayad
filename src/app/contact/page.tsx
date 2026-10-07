@@ -4,14 +4,12 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Mail,
-  Phone,
-  MapPin,
   Send,
   MessageSquare,
   Sparkles,
   CheckCircle,
   Building,
-  Clock,
+  ShieldCheck,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -74,7 +72,7 @@ export default function ContactPage() {
       } else {
         setErrorMsg(
           data.message ||
-            (isHin ? 'पूछताछ सबमिट करने में विफलता। कृपया पुनः प्रयास करें।' : 'Failed to submit inquiry. Please try again.')
+          (isHin ? 'पूछताछ सबमिट करने में विफलता। कृपया पुनः प्रयास करें।' : 'Failed to submit inquiry. Please try again.')
         );
       }
     } catch (err) {
@@ -88,18 +86,18 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white selection:bg-amber-400 selection:text-slate-950 flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-950 text-white selection:bg-amber-400 selection:text-slate-950 flex flex-col justify-between overflow-x-hidden">
       <Navbar />
 
-      <main className="flex-grow pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+      <main className="flex-grow pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         {/* HERO SECTION */}
-        <div className="text-center relative mb-12">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-72 w-72 rounded-full bg-amber-500/10 blur-[100px] pointer-events-none" />
-          
+        <div className="text-center relative mb-14">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-amber-500/15 blur-[120px] pointer-events-none" />
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-300 mb-4"
+            className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-300 mb-4 shadow-lg shadow-amber-500/10"
           >
             <Sparkles className="h-4 w-4" />
             {isHin ? 'मायड़ टीम से जुड़ें' : 'Connect With MAYAD Team'}
@@ -130,77 +128,63 @@ export default function ContactPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* LEFT: CONTACT CARDS */}
+          {/* LEFT: OFFICIAL CONTACT INFO CARD */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-              <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="rounded-3xl border border-white/10 bg-[#090d1f]/90 p-6 sm:p-8 shadow-2xl backdrop-blur-2xl space-y-6 relative overflow-hidden group hover:border-amber-500/30 transition-all duration-300"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+
+              <h2 className="text-xl font-extrabold text-white flex items-center gap-2.5 border-b border-white/10 pb-4">
                 <Building className="h-5 w-5 text-amber-400" />
-                {isHin ? 'मायड़ प्रोडक्शन हाउस' : 'MAYAD Production House'}
+                <span>{isHin ? 'मायड़ प्रोडक्शन हाउस' : 'MAYAD Production House'}</span>
               </h2>
 
               <div className="space-y-6 text-sm">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 text-amber-400">
-                    <MapPin className="h-5 w-5" />
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-black/40 border border-white/5 group-hover:border-amber-400/20 transition-all">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-amber-400/30 bg-amber-400/10 text-amber-400 shadow-md">
+                    <Mail className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white">{isHin ? 'पंजीकृत पता' : 'Registered Address'}</h3>
-                    <p className="mt-1 text-xs text-slate-300 leading-relaxed">
-                      {isHin
-                        ? 'मायड़ स्टूडियोज़ एवं प्रोडक्शन हाउस, बासनी, जोधपुर, राजस्थान, भारत - 342005'
-                        : 'MAYAD Studios & Production House, Basni, Jodhpur, Rajasthan, India - 342005'}
-                    </p>
+                    <h3 className="font-bold text-white text-base">{isHin ? 'ईमेल पता' : 'Email Address'}</h3>
+                    <p className="mt-1 text-sm text-amber-300 font-semibold selection:bg-amber-400"> mayadstudio122@gmail.com</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 text-amber-400">
-                    <Phone className="h-5 w-5" />
+                <div className="p-4 rounded-2xl bg-amber-400/5 border border-amber-400/20 text-xs space-y-2">
+                  <div className="flex items-center gap-2 text-amber-300 font-bold">
+                    <ShieldCheck className="h-4 w-4" />
+                    <span>{isHin ? 'त्वरित प्रतिक्रिया समय' : 'Fast Response'}</span>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-white">{isHin ? 'फ़ोन / व्हाट्सएप' : 'Phone / WhatsApp'}</h3>
-                    <p className="mt-1 text-xs text-slate-300">+91 (141) 298-MAYAD</p>
-                    <p className="text-xs text-amber-400 font-semibold">+91 98290 00000</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 text-amber-400">
-                    <Mail className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-white">{isHin ? 'ईमेल पता' : 'Email Address'}</h3>
-                    <p className="mt-1 text-xs text-slate-300">contact@mayad.in</p>
-                    <p className="text-xs text-slate-400">inquiries@mayad.in</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 text-amber-400">
-                    <Clock className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-white">{isHin ? 'कार्यालय समय' : 'Office Hours'}</h3>
-                    <p className="mt-1 text-xs text-slate-300">
-                      {isHin ? 'सोमवार - शनिवार: सुबह 9:30 - शाम 7:00 IST' : 'Monday – Saturday: 9:30 AM – 7:00 PM IST'}
-                    </p>
-                  </div>
+                  <p className="text-slate-300 leading-relaxed">
+                    {isHin
+                      ? 'हमारी सहायता और प्रबंधन टीम सभी व्यावसायिक एवं सामान्य ईमेल पूछताछ का उत्तर 24 घंटे के भीतर देती है।'
+                      : 'Our support & management team reviews all official and general inquiry emails within 24 hours.'}
+                  </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* RIGHT: INQUIRY FORM */}
           <div className="lg:col-span-7">
-            <div className="rounded-3xl border border-white/10 bg-slate-900/90 p-6 sm:p-10 shadow-2xl backdrop-blur-xl">
-              <h2 className="text-2xl font-black text-white mb-2 flex items-center gap-2">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="rounded-3xl border border-white/10 bg-[#090d1f]/90 p-6 sm:p-10 shadow-2xl backdrop-blur-2xl"
+            >
+              <h2 className="text-2xl font-black text-white mb-2 flex items-center gap-2.5">
                 <MessageSquare className="h-6 w-6 text-amber-400" />
-                {isHin ? 'संदेश / पूछताछ भेजें' : 'Send an Inquiry'}
+                <span>{isHin ? 'संदेश / पूछताछ भेजें' : 'Send an Inquiry'}</span>
               </h2>
               <p className="text-xs text-slate-400 mb-6">
                 {isHin
                   ? 'नीचे दिया गया फॉर्म भरें और आपका संदेश सीधे मायड़ प्रबंधन को भेज दिया जाएगा।'
-                  : 'Fill out the form below and your message will be forwarded directly to the MAYAD CEO & Management Console.'}
+                  : 'Fill out the form below and your message will be forwarded directly to the MAYAD Management Console.'}
               </p>
 
               {submitted ? (
@@ -217,7 +201,7 @@ export default function ContactPage() {
                   <button
                     type="button"
                     onClick={() => setSubmitted(false)}
-                    className="inline-block rounded-xl bg-amber-400 px-6 py-2.5 text-xs font-bold text-slate-950 hover:bg-amber-300 transition"
+                    className="inline-block rounded-xl bg-amber-400 px-6 py-2.5 text-xs font-bold text-slate-950 hover:bg-amber-300 transition cursor-pointer"
                   >
                     {isHin ? 'एक और पूछताछ भेजें' : 'Send Another Inquiry'}
                   </button>
@@ -240,7 +224,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder={isHin ? 'उदा. रमेश कुमार' : 'e.g. Ramesh Kumar'}
-                        className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                        className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none transition-all"
                         required
                       />
                     </div>
@@ -254,7 +238,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="e.g. ramesh@example.com"
-                        className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                        className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none transition-all"
                         required
                       />
                     </div>
@@ -270,7 +254,7 @@ export default function ContactPage() {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="+91 98290 00000"
-                        className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                        className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none transition-all"
                       />
                     </div>
 
@@ -281,7 +265,7 @@ export default function ContactPage() {
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs font-bold text-white focus:border-amber-400 focus:outline-none"
+                        className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs font-bold text-white focus:border-amber-400 focus:outline-none transition-all"
                       >
                         <option value="General">{isHin ? 'सामान्य पूछताछ' : 'General Inquiry'}</option>
                         <option value="Production">{isHin ? 'फिल्म / वीडियो निर्माण' : 'Film / Video Production'}</option>
@@ -301,7 +285,7 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       placeholder={isHin ? 'उदा. आगामी राजस्थानी फिल्म के संबंध में पूछताछ' : 'e.g. Production Inquiry regarding upcoming film'}
-                      className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none transition-all"
                       required
                     />
                   </div>
@@ -315,7 +299,7 @@ export default function ContactPage() {
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder={isHin ? 'यहाँ अपना विस्तृत संदेश लिखें...' : 'Write your inquiry message details here...'}
                       rows={5}
-                      className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-xs text-white placeholder-slate-500 focus:border-amber-400 focus:outline-none transition-all resize-none"
                       required
                     />
                   </div>
@@ -323,7 +307,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-xl bg-amber-400 py-3.5 text-xs font-extrabold text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-300 disabled:opacity-50 transition flex items-center justify-center gap-2"
+                    className="w-full rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 py-3.5 text-xs font-extrabold text-slate-950 shadow-lg shadow-amber-500/20 hover:scale-[1.01] active:scale-95 disabled:opacity-50 transition cursor-pointer flex items-center justify-center gap-2"
                   >
                     <Send className="h-4 w-4" />
                     {loading
@@ -332,7 +316,7 @@ export default function ContactPage() {
                   </button>
                 </form>
               )}
-            </div>
+            </motion.div>
           </div>
         </div>
       </main>

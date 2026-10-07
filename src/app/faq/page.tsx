@@ -12,8 +12,6 @@ import {
   UserPlus,
   Sparkles,
 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { getStoredFaqs, FAQItem } from '@/data/faqData';
 import { useApp } from '@/context/AppContext';
 
@@ -56,8 +54,6 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-[#030712] text-white flex flex-col justify-between">
-      <Navbar />
-
       <main className="pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full flex-grow">
         {/* Header Banner */}
         <div className="text-center mb-12 relative">
@@ -225,8 +221,6 @@ export default function FAQPage() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

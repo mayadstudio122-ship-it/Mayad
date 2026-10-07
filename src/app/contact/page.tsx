@@ -11,8 +11,6 @@ import {
   Building,
   ShieldCheck,
 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { useApp } from '@/context/AppContext';
 import { getBackendUrl } from '@/utils/config';
 
@@ -87,8 +85,6 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white selection:bg-amber-400 selection:text-slate-950 flex flex-col justify-between overflow-x-hidden">
-      <Navbar />
-
       <main className="flex-grow pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         {/* HERO SECTION */}
         <div className="text-center relative mb-14">
@@ -320,8 +316,6 @@ export default function ContactPage() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

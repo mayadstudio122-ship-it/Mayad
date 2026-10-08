@@ -16,8 +16,6 @@ export default function Hero() {
 
       {/* =====================================================
           MOBILE BACKGROUND
-          Face ko content ke peeche se hatane ke liye
-          image ko thoda right shift kiya gaya hai.
       ===================================================== */}
 
       <div className="absolute inset-0 sm:hidden">
@@ -175,7 +173,7 @@ export default function Hero() {
 
       {/* =====================================================
           DESKTOP BUTTONS
-          ===================================================== */}
+      ===================================================== */}
 
       <div className="absolute bottom-10 left-8 z-20 hidden items-center justify-start gap-4 lg:flex xl:left-16">
 
@@ -210,6 +208,29 @@ export default function Hero() {
         </a>
 
       </div>
+
+      {/* =====================================================
+          SMALL BLINKING SCROLL DOWN
+      ===================================================== */}
+
+      <button
+        type="button"
+        onClick={() => {
+          document.getElementById("about")?.scrollIntoView({
+            behavior: "smooth",
+          });
+        }}
+        className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-0.5 text-white/80 transition-opacity duration-300 hover:text-white sm:bottom-6"
+        aria-label="Scroll down"
+      >
+        <span className="text-[7px] font-medium uppercase tracking-[0.22em] opacity-80 sm:text-[8px] sm:tracking-[0.3em]">
+          Scroll Down
+        </span>
+
+        <span className="animate-[bounce_1.5s_infinite] text-lg font-light leading-none text-[#ffc83b] drop-shadow-[0_0_8px_rgba(255,200,59,0.7)] sm:text-xl">
+          ↓
+        </span>
+      </button>
 
     </section>
   );

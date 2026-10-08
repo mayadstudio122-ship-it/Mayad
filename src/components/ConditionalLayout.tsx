@@ -19,7 +19,7 @@ export default function ConditionalLayout({
     pathname === '/login' ||
     pathname === '/signup' ||
     pathname === '/forgot-password' ||
-    pathname?.startsWith('/artist') ||
+    (pathname?.startsWith('/artist') && !pathname?.startsWith('/artists')) ||
     pathname?.startsWith('/artist-portal') ||
     pathname?.startsWith('/admin');
 

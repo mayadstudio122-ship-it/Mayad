@@ -87,7 +87,7 @@ export default function Footer() {
       href: "/help-support",
     },
     {
-      name: "Data Deletion Request",
+      name: "Data Deletion",
       href: "/data-deletion-request",
     },
   ];
@@ -104,63 +104,71 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#050A12] text-white">
+    <footer className="relative overflow-hidden border-t border-white/[0.08] bg-[#050A12] text-white">
 
       {/* =========================================
-          DECORATIVE GLOW
+          BACKGROUND GLOWS
       ========================================= */}
 
-      <div className="pointer-events-none absolute left-[-120px] top-[-120px] h-[300px] w-[300px] rounded-full bg-[#FBBE16]/5 blur-[120px]" />
+      <div className="pointer-events-none absolute -left-32 -top-32 h-72 w-72 rounded-full bg-[#FBBE16]/[0.035] blur-[110px]" />
 
-      <div className="pointer-events-none absolute bottom-[-150px] right-[-100px] h-[350px] w-[350px] rounded-full bg-[#FBBE16]/5 blur-[140px]" />
+      <div className="pointer-events-none absolute -bottom-40 -right-32 h-80 w-80 rounded-full bg-[#FBBE16]/[0.035] blur-[120px]" />
 
       {/* =========================================
           MAIN FOOTER
       ========================================= */}
 
-      <div className="relative mx-auto max-w-[1800px] px-6 pb-12 pt-14 sm:px-8 lg:px-12 lg:pt-16 xl:px-16">
+      <div className="relative mx-auto max-w-[1500px] px-5 pb-8 pt-10 sm:px-8 sm:pb-10 sm:pt-12 lg:px-10 xl:px-14">
 
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
+        <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-12 lg:gap-7">
 
           {/* =====================================
-              COLUMN 1 - BRAND
+              BRAND
           ===================================== */}
 
-          <div className="lg:col-span-4 xl:col-span-4">
+          <div className="sm:col-span-2 lg:col-span-4">
 
             {/* Logo */}
-            <div className="relative mb-6 h-[48px] w-[185px]">
-              <Image
-                src="/mayadlogo.jpg"
-                alt="MAYAD Logo"
-                fill
-                priority
-                className="object-contain object-left"
-              />
-            </div>
+
+            <Link
+              href="/"
+              className="mb-5 block w-fit transition-opacity duration-300 hover:opacity-90"
+            >
+              <div className="relative h-[38px] w-[145px] sm:h-[42px] sm:w-[160px]">
+                <Image
+                  src="/mayadlogo.jpg"
+                  alt="MAYAD Logo"
+                  fill
+                  priority
+                  className="object-contain object-left"
+                />
+              </div>
+            </Link>
 
             {/* Description */}
-            <p className="max-w-[430px] text-[14px] leading-[1.8] text-gray-300 sm:text-[15px]">
+
+            <p className="max-w-[400px] text-[12px] leading-[1.75] text-gray-400 sm:text-[13px]">
               {t("footerDesc")}
             </p>
 
-            <p className="mt-5 max-w-[430px] text-[13px] font-medium leading-[1.7] text-gray-400">
+            <p className="mt-3 max-w-[390px] text-[11px] leading-[1.7] text-gray-500 sm:text-[12px]">
               Celebrating creativity, culture and people while building a
               meaningful digital presence for Rajasthan.
             </p>
+
           </div>
 
           {/* =====================================
-              COLUMN 2 - COMPANY
+              COMPANY
           ===================================== */}
 
-          <div className="lg:col-span-2 lg:border-l lg:border-white/10 lg:pl-8 xl:pl-10">
+          <div className="lg:col-span-2 lg:border-l lg:border-white/[0.08] lg:pl-7">
 
-            <h3 className="mb-6 text-[18px] font-bold text-white sm:text-[19px]">
+            <h3 className="mb-4 text-[14px] font-semibold tracking-wide text-white sm:text-[15px]">
               Company
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
 
               {companyLinks.map((link) => {
                 const Icon = link.icon;
@@ -169,13 +177,11 @@ export default function Footer() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="group flex items-center gap-2.5"
+                    className="group flex items-center gap-2"
                   >
-                    <Icon
-                      className="h-[15px] w-[15px] shrink-0 text-gray-500 transition-colors group-hover:text-[#FBBE16]"
-                    />
+                    <Icon className="h-[14px] w-[14px] shrink-0 text-gray-500 transition-colors duration-300 group-hover:text-[#FBBE16]" />
 
-                    <span className="text-[13px] text-gray-300 transition-colors group-hover:text-[#FBBE16] sm:text-[14px]">
+                    <span className="text-[12px] text-gray-400 transition-colors duration-300 group-hover:text-[#FBBE16] sm:text-[13px]">
                       {link.name}
                     </span>
                   </Link>
@@ -183,67 +189,65 @@ export default function Footer() {
               })}
 
             </div>
+
           </div>
 
           {/* =====================================
-              COLUMN 3 - EXPLORE
+              EXPLORE
           ===================================== */}
 
           <div className="lg:col-span-2">
 
-            <h3 className="mb-6 text-[18px] font-bold text-white sm:text-[19px]">
+            <h3 className="mb-4 text-[14px] font-semibold tracking-wide text-white sm:text-[15px]">
               Explore
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
 
               {exploreLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="group flex items-center gap-2"
+                  className="group flex items-center gap-1.5"
                 >
-                  <ChevronRight
-                    className="h-[16px] w-[16px] shrink-0 text-gray-500 transition-all group-hover:translate-x-1 group-hover:text-[#FBBE16]"
-                  />
+                  <ChevronRight className="h-[13px] w-[13px] shrink-0 text-gray-600 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-[#FBBE16]" />
 
-                  <span className="text-[13px] text-gray-300 transition-colors group-hover:text-[#FBBE16] sm:text-[14px]">
+                  <span className="text-[12px] text-gray-400 transition-colors duration-300 group-hover:text-[#FBBE16] sm:text-[13px]">
                     {link.name}
                   </span>
                 </Link>
               ))}
 
             </div>
+
           </div>
 
           {/* =====================================
-              COLUMN 4 - CONNECT
+              CONTACT
           ===================================== */}
 
           <div className="lg:col-span-4">
 
-            <h3 className="mb-6 text-[18px] font-bold text-white sm:text-[19px]">
+            <h3 className="mb-4 text-[14px] font-semibold tracking-wide text-white sm:text-[15px]">
               Contact MAYAD
             </h3>
 
-            <p className="mb-6 max-w-[360px] text-[14px] leading-[1.7] text-gray-400">
+            <p className="mb-5 max-w-[360px] text-[12px] leading-[1.7] text-gray-400 sm:text-[13px]">
               Get in touch with MAYAD for artist registration, general
               enquiries, collaborations and other information.
             </p>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
 
               {contactLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="group flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 transition-all duration-300 hover:border-[#FBBE16]/40 hover:bg-[#FBBE16]/5"
+                  className="group flex min-h-[42px] items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.025] px-3.5 py-2.5 transition-all duration-300 hover:border-[#FBBE16]/30 hover:bg-[#FBBE16]/[0.04]"
                 >
-                  <ChevronRight
-                    className="h-[16px] w-[16px] shrink-0 text-gray-400 transition-all group-hover:translate-x-1 group-hover:text-[#FBBE16]"
-                  />
+                  <ChevronRight className="h-[14px] w-[14px] shrink-0 text-gray-500 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-[#FBBE16]" />
 
-                  <span className="text-[13px] font-medium text-gray-300 transition-colors group-hover:text-[#FBBE16]">
+                  <span className="text-[11px] font-medium text-gray-400 transition-colors duration-300 group-hover:text-[#FBBE16] sm:text-[12px]">
                     {link.name}
                   </span>
                 </Link>
@@ -254,31 +258,64 @@ export default function Footer() {
           </div>
 
         </div>
+
       </div>
 
-
-
       {/* =========================================
-          COPYRIGHT
+          BOTTOM SECTION
       ========================================= */}
 
-      <div className="relative mx-auto max-w-[1800px] px-6 sm:px-8 lg:px-12 xl:px-16">
+      <div className="relative mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-10 xl:px-14">
 
-        <div className="border-t border-white/10 py-6">
+        <div className="border-t border-white/[0.08]">
 
-          <div className="flex flex-col items-center justify-between gap-3 text-[12px] text-gray-500 md:flex-row sm:text-[13px]">
+          <div className="flex flex-col gap-4 py-5 md:flex-row md:items-center md:justify-between">
 
-            <p>
+            {/* Copyright */}
+
+            <p className="text-center text-[10px] text-gray-500 sm:text-[11px] md:text-left">
               {t("copyright")}
             </p>
 
-            <p className="text-center md:text-right">
+            {/* Tagline */}
+
+            <p className="text-center text-[10px] text-gray-500 sm:text-[11px] md:text-right">
               {t("taglineSubtitle")}
             </p>
 
           </div>
 
+          {/* =====================================
+              LEGAL LINKS
+          ===================================== */}
+
+          <div className="border-t border-white/[0.05] py-4">
+
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-x-5">
+
+              {legalLinks.map((link, index) => (
+                <React.Fragment key={link.name}>
+
+                  <Link
+                    href={link.href}
+                    className="text-[9px] text-gray-500 transition-colors duration-300 hover:text-[#FBBE16] sm:text-[10px]"
+                  >
+                    {link.name}
+                  </Link>
+
+                  {index !== legalLinks.length - 1 && (
+                    <span className="h-1 w-1 rounded-full bg-gray-700" />
+                  )}
+
+                </React.Fragment>
+              ))}
+
+            </div>
+
+          </div>
+
         </div>
+
       </div>
 
       {/* =========================================
@@ -289,9 +326,9 @@ export default function Footer() {
         type="button"
         onClick={scrollToTop}
         aria-label="Back to top"
-        className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#FFBD00] text-black shadow-lg transition-all hover:scale-105 hover:bg-[#ffd04a] sm:bottom-8 sm:right-8 sm:h-14 sm:w-14"
+        className="fixed bottom-5 right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-[#FFBD00] text-black shadow-[0_5px_25px_rgba(255,189,0,0.25)] transition-all duration-300 hover:scale-105 hover:bg-[#ffd04a] active:scale-95 sm:bottom-7 sm:right-7 sm:h-12 sm:w-12"
       >
-        <ArrowUp className="h-5 w-5 sm:h-6 sm:w-6" />
+        <ArrowUp className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
       </button>
 
     </footer>

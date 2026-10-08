@@ -7,7 +7,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 import {
-  Search,
   Menu,
   X,
   Globe,
@@ -25,7 +24,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { openSearch, language, setLanguage, t } = useApp();
+  const { language, setLanguage, t } = useApp();
 
   // ============================================================
   // ARTIST PHOTO
@@ -239,17 +238,6 @@ export default function Navbar() {
 
           <div className="hidden shrink-0 items-center gap-2 lg:flex xl:gap-3">
 
-            {/* SEARCH */}
-
-            <button
-              onClick={openSearch}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-slate-300 transition-colors hover:text-mayad-gold focus:outline-none"
-              title="Search titles"
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-            </button>
-
             {/* LANGUAGE */}
 
             <div className="relative flex items-center rounded-full border border-white/15 bg-white/10 p-0.5 text-xs font-bold text-white shadow-inner backdrop-blur-md">
@@ -331,17 +319,6 @@ export default function Navbar() {
               </button>
 
             </div>
-
-            {/* SEARCH */}
-
-            <button
-              onClick={openSearch}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-slate-200 transition-all hover:border-mayad-gold/50 hover:text-mayad-gold active:scale-95 sm:h-9 sm:w-9"
-              aria-label="Search"
-              title="Search"
-            >
-              <Search className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
-            </button>
 
             {/* MENU */}
 

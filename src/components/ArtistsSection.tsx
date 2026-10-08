@@ -95,7 +95,6 @@ export default function ArtistsSection() {
         <SectionHeader
           title={t('artistsTitle')}
           subtitle={t('artistsSubtitle')}
-          viewAllHref="/artists"
         />
 
         {/* ARTISTS GRID */}

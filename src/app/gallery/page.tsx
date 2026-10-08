@@ -9,7 +9,6 @@ import {
   Layers,
   Sparkles,
   Users,
-  Search,
   X,
   ChevronLeft,
   ChevronRight,
@@ -213,29 +212,6 @@ export default function GalleryPage() {
             })}
           </div>
 
-          {/* SEARCH */}
-
-          <div className="relative w-full flex-shrink-0 md:w-72">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={isHin ? 'तस्वीरें खोजें...' : 'Search photos...'}
-              className="w-full rounded-xl border border-white/10 bg-[#0D1226] py-2.5 pl-11 pr-10 text-xs text-white outline-none transition-colors placeholder:text-slate-400 focus:border-mayad-gold sm:text-sm"
-            />
-
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-white"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            )}
-          </div>
         </div>
       </section>
 

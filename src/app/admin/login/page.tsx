@@ -46,9 +46,111 @@ export default function AdminAuthPage() {
 
   // Forgot Password Modal State
   const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotStep, setForgotStep] = useState<'EMAIL' | 'OTP' | 'NEW_PASSWORD'>('EMAIL');
   const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotOtp, setForgotOtp] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotFeedback, setForgotFeedback] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
+
+  const resetForgotState = () => {
+    setForgotStep('EMAIL');
+    setForgotEmail('');
+    setForgotOtp('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setForgotLoading(false);
+    setForgotFeedback(null);
+  };
+
+  // Step 1: Send Forgot Password OTP
+  const handleSendForgotOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotFeedback(null);
+
+    if (!forgotEmail.trim()) {
+      setForgotFeedback({ msg: 'Please enter your registered admin email address.', type: 'error' });
+      return;
+    }
+
+    setForgotLoading(true);
+    try {
+      const res = await adminService.forgotPassword({ email: forgotEmail.trim().toLowerCase() });
+      if (res.success) {
+        setForgotFeedback({ msg: res.message || 'OTP code dispatched to your email.', type: 'success' });
+        setForgotStep('OTP');
+      }
+    } catch (err: any) {
+      setForgotFeedback({ msg: err.message || 'Failed to send OTP. Please check email address.', type: 'error' });
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  // Step 2: Verify Forgot Password OTP
+  const handleVerifyForgotOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotFeedback(null);
+
+    if (!forgotOtp.trim() || forgotOtp.trim().length < 6) {
+      setForgotFeedback({ msg: 'Please enter the valid 6-digit OTP code.', type: 'error' });
+      return;
+    }
+
+    setForgotLoading(true);
+    try {
+      const res = await adminService.verifyResetOtp({
+        email: forgotEmail.trim().toLowerCase(),
+        otp: forgotOtp.trim(),
+      });
+      if (res.success) {
+        setForgotFeedback({ msg: res.message || 'OTP verified successfully.', type: 'success' });
+        setForgotStep('NEW_PASSWORD');
+      }
+    } catch (err: any) {
+      setForgotFeedback({ msg: err.message || 'Invalid or expired OTP code.', type: 'error' });
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  // Step 3: Reset Password
+  const handleResetPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotFeedback(null);
+
+    if (!newPassword || newPassword.length < 6) {
+      setForgotFeedback({ msg: 'New password must be at least 6 characters long.', type: 'error' });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setForgotFeedback({ msg: 'Passwords do not match. Please try again.', type: 'error' });
+      return;
+    }
+
+    setForgotLoading(true);
+    try {
+      const res = await adminService.resetPasswordWithOtp({
+        email: forgotEmail.trim().toLowerCase(),
+        otp: forgotOtp.trim(),
+        newPassword,
+      });
+
+      if (res.success) {
+        setEmail(forgotEmail.trim().toLowerCase());
+        setSuccessMsg(res.message || 'Admin password updated successfully! Please login with your new password.');
+        setShowForgotModal(false);
+        resetForgotState();
+      }
+    } catch (err: any) {
+      setForgotFeedback({ msg: err.message || 'Failed to update password. Please try again.', type: 'error' });
+    } finally {
+      setForgotLoading(false);
+    }
+  };
 
   // Check if already authenticated on mount
   useEffect(() => {
@@ -516,7 +618,10 @@ export default function AdminAuthPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setShowForgotModal(false)}
+              onClick={() => {
+                setShowForgotModal(false);
+                resetForgotState();
+              }}
               className="fixed inset-0 bg-black/80 backdrop-blur-md"
             />
             <motion.div
@@ -531,16 +636,15 @@ export default function AdminAuthPage() {
                   <span>Reset Admin Password</span>
                 </div>
                 <button
-                  onClick={() => setShowForgotModal(false)}
+                  onClick={() => {
+                    setShowForgotModal(false);
+                    resetForgotState();
+                  }}
                   className="text-slate-400 hover:text-white p-1 rounded-lg"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
-
-              <p className="text-xs text-slate-300 mb-4">
-                Enter your registered admin email address below. We will dispatch password reset instructions to your inbox.
-              </p>
 
               {forgotFeedback && (
                 <div
@@ -554,41 +658,172 @@ export default function AdminAuthPage() {
                 </div>
               )}
 
-              <form onSubmit={handleForgotSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                    Admin Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input
-                      type="email"
-                      required
-                      value={forgotEmail}
-                      onChange={(e) => setForgotEmail(e.target.value)}
-                      placeholder="admin@mayad.in"
-                      className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"
-                    />
+              {/* STEP 1: ENTER EMAIL */}
+              {forgotStep === 'EMAIL' && (
+                <form onSubmit={handleSendForgotOtp} className="space-y-4">
+                  <p className="text-xs text-slate-300">
+                    Enter your registered admin email address below. A 6-digit OTP code will be sent to your inbox to reset your password.
+                  </p>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                      Admin Email Address
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <input
+                        type="email"
+                        required
+                        value={forgotEmail}
+                        onChange={(e) => setForgotEmail(e.target.value)}
+                        placeholder="admin@mayad.in"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-end gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowForgotModal(false)}
-                    className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={forgotLoading}
-                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 text-black text-xs font-bold hover:from-amber-300 hover:to-yellow-300 transition-colors disabled:opacity-50"
-                  >
-                    {forgotLoading ? 'Sending...' : 'Send Reset Link'}
-                  </button>
-                </div>
-              </form>
+                  <div className="flex items-center justify-end gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotModal(false);
+                        resetForgotState();
+                      }}
+                      className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={forgotLoading}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 text-black text-xs font-bold hover:from-amber-300 hover:to-yellow-300 transition-colors disabled:opacity-50"
+                    >
+                      {forgotLoading ? 'Sending OTP...' : 'Send Reset OTP'}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* STEP 2: ENTER OTP */}
+              {forgotStep === 'OTP' && (
+                <form onSubmit={handleVerifyForgotOtp} className="space-y-4">
+                  <p className="text-xs text-slate-300">
+                    Enter the 6-digit OTP code sent to <span className="font-bold text-amber-400">{forgotEmail}</span>.
+                  </p>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                      6-Digit OTP Code
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <input
+                        type="text"
+                        maxLength={6}
+                        required
+                        value={forgotOtp}
+                        onChange={(e) => setForgotOtp(e.target.value)}
+                        placeholder="123456"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-base font-bold text-amber-400 placeholder-slate-500 focus:outline-none focus:border-amber-400 tracking-widest text-center"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setForgotStep('EMAIL')}
+                      className="text-xs text-slate-400 hover:text-slate-200"
+                    >
+                      ← Back
+                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleSendForgotOtp}
+                        disabled={forgotLoading}
+                        className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-medium hover:bg-slate-700 disabled:opacity-50"
+                      >
+                        Resend OTP
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={forgotLoading || forgotOtp.trim().length < 6}
+                        className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 text-black text-xs font-bold hover:from-amber-300 hover:to-yellow-300 transition-colors disabled:opacity-50"
+                      >
+                        {forgotLoading ? 'Verifying...' : 'Verify OTP'}
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              )}
+
+              {/* STEP 3: SET NEW PASSWORD */}
+              {forgotStep === 'NEW_PASSWORD' && (
+                <form onSubmit={handleResetPasswordSubmit} className="space-y-4">
+                  <p className="text-xs text-slate-300">
+                    Set a new secure password for your Administrator account.
+                  </p>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                      New Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="At least 6 characters"
+                        className="w-full pl-10 pr-10 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                      >
+                        {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                      Confirm New Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Re-enter new password"
+                        className="w-full pl-10 pr-10 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotModal(false);
+                        resetForgotState();
+                      }}
+                      className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={forgotLoading || !newPassword || newPassword !== confirmPassword}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 text-black text-xs font-bold hover:from-amber-300 hover:to-yellow-300 transition-colors disabled:opacity-50"
+                    >
+                      {forgotLoading ? 'Updating Password...' : 'Reset & Save Password'}
+                    </button>
+                  </div>
+                </form>
+              )}
             </motion.div>
           </div>
         )}

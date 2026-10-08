@@ -517,7 +517,7 @@ export default function AdminDashboardPage() {
           {[
             { id: 'overview', label: 'Overview', icon: LayoutDashboard },
             { id: 'movies', label: 'Movies Management', icon: Film },
-            { id: 'talent-applications', label: 'Talent Applications', icon: Award },
+            { id: 'talent-applications', label: 'Artist Registration', icon: Award },
             { id: 'add-artist', label: 'Add Artist', icon: UserPlus },
             { id: 'blogs', label: 'Blogs Management', icon: BookOpen },
             { id: 'inquiries', label: 'Contacts / Inquiries', icon: MessageSquare },
@@ -605,7 +605,7 @@ export default function AdminDashboardPage() {
                 {[
                   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
                   { id: 'movies', label: 'Movies Management', icon: Film },
-                  { id: 'talent-applications', label: 'Talent Applications', icon: Award },
+                  { id: 'talent-applications', label: 'Artist Registration', icon: Award },
                   { id: 'add-artist', label: 'Add Artist', icon: UserPlus },
                   { id: 'blogs', label: 'Blogs Management', icon: BookOpen },
                   { id: 'inquiries', label: 'Contacts / Inquiries', icon: MessageSquare },
@@ -666,7 +666,7 @@ export default function AdminDashboardPage() {
               <h2 className="text-base sm:text-lg font-bold text-white capitalize">
                 {activeTab === 'overview' && 'Dashboard Overview'}
                 {activeTab === 'movies' && 'Movies & Series Management'}
-                {activeTab === 'talent-applications' && 'Talent Applications (Join MAYAD)'}
+                {activeTab === 'talent-applications' && 'Artist Registration (Join MAYAD)'}
                 {activeTab === 'add-artist' && 'Add Artist & Directory Management'}
                 {activeTab === 'blogs' && 'Blogs & Articles Management'}
                 {activeTab === 'inquiries' && 'Contacts & Inquiries'}

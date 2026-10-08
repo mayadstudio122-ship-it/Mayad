@@ -5,8 +5,21 @@
 
 import { getApiBaseUrl } from '@/utils/config';
 
-const API_BASE_URL = getApiBaseUrl();
-const ADMIN_API_URL = `${API_BASE_URL}/admin`;
+const getAdminUrl = () => `${getApiBaseUrl()}/admin`;
+const API_BASE_URL = { toString: () => getApiBaseUrl() };
+const ADMIN_API_URL = { toString: () => getAdminUrl() };
+
+const parseResponseJson = async (response: Response) => {
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    return await response.json();
+  }
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Server returned status ${response.status}. Please make sure backend is running.`);
+  }
+  throw new Error('Server returned an invalid non-JSON response.');
+};
 
 // Token storage key
 const TOKEN_KEY = 'mayad_admin_token';
@@ -291,6 +304,60 @@ export const adminService = {
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data?.message || 'Failed to resend OTP');
+    }
+    return data;
+  },
+
+  // 2D. ADMIN FORGOT PASSWORD - REQUEST OTP
+  forgotPassword: async (payload: { email: string }): Promise<{ success: boolean; message: string; email?: string }> => {
+    const response = await fetch(`${getAdminUrl()}/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+
+    const data = await parseResponseJson(response);
+    if (!response.ok) {
+      throw new Error(data?.message || 'Failed to send reset OTP');
+    }
+    return data;
+  },
+
+  // 2E. ADMIN FORGOT PASSWORD - VERIFY OTP
+  verifyResetOtp: async (payload: { email: string; otp: string }): Promise<{ success: boolean; message: string }> => {
+    const response = await fetch(`${getAdminUrl()}/verify-reset-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+
+    const data = await parseResponseJson(response);
+    if (!response.ok) {
+      throw new Error(data?.message || 'Failed to verify OTP code');
+    }
+    return data;
+  },
+
+  // 2F. ADMIN FORGOT PASSWORD - RESET PASSWORD
+  resetPasswordWithOtp: async (payload: { email: string; otp: string; newPassword: string }): Promise<{ success: boolean; message: string }> => {
+    const response = await fetch(`${getAdminUrl()}/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+
+    const data = await parseResponseJson(response);
+    if (!response.ok) {
+      throw new Error(data?.message || 'Failed to reset password');
     }
     return data;
   },

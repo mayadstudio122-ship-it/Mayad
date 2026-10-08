@@ -31,6 +31,7 @@ import {
   FileCheck,
   LayoutGrid,
   List,
+  Maximize2,
 } from 'lucide-react';
 import {
   adminService,
@@ -91,6 +92,7 @@ export default function AdminTalentApplications({
   const [applicationToDelete, setApplicationToDelete] = useState<AdminTalentApplicationRecord | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [statusUpdateLoading, setStatusUpdateLoading] = useState(false);
+  const [fullPhotoUrl, setFullPhotoUrl] = useState<string | null>(null);
 
   const notify = (text: string, type: 'success' | 'error' = 'success') => {
     if (showToast) showToast(text, type);
@@ -591,54 +593,46 @@ export default function AdminTalentApplications({
 
               {/* MODAL HEADER */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 border-b border-white/10 pb-6 mb-6">
-                <div className="w-24 h-24 rounded-2xl overflow-hidden bg-black border-2 border-[#D4AF37]/50 shrink-0 shadow-lg">
+                <div
+                  onClick={() => setFullPhotoUrl(selectedApplication.profilePhoto || '/Default.jpg')}
+                  className="relative group w-24 h-24 rounded-2xl overflow-hidden bg-black border-2 border-[#D4AF37]/50 shrink-0 shadow-lg cursor-pointer"
+                  title="Click to view full photo"
+                >
                   <img
                     src={selectedApplication.profilePhoto || '/Default.jpg'}
                     alt={selectedApplication.fullName}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                   />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <Maximize2 className="w-5 h-5 text-white" />
+                  </div>
                 </div>
 
-                <div className="space-y-1.5 flex-1">
+                <div className="space-y-2 flex-1">
                   <div className="flex flex-wrap items-center gap-3">
                     <h2 className="text-2xl font-black text-white">{selectedApplication.fullName}</h2>
-                    <span className={`px-3 py-0.5 rounded-full text-xs font-extrabold border ${getStatusBadge(selectedApplication.status)}`}>
-                      {selectedApplication.status}
-                    </span>
                   </div>
 
                   <p className="text-xs text-slate-400">
                     Age {selectedApplication.age} • {selectedApplication.gender} • {selectedApplication.city}, {selectedApplication.state}, {selectedApplication.country}
                   </p>
 
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-2 pt-1 items-center">
                     {selectedApplication.interestedRoles.map((r, idx) => (
                       <span key={idx} className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#D4AF37]/20 text-[#F5D77A] border border-[#D4AF37]/40">
                         {r}
                       </span>
                     ))}
-                  </div>
-                </div>
-              </div>
 
-              {/* STATUS CHANGE ACTION BAR */}
-              <div className="rounded-2xl bg-black/60 border border-white/10 p-4 mb-6 space-y-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Update Application Status:</span>
-                <div className="flex flex-wrap gap-2">
-                  {(['Pending', 'Under Review', 'Shortlisted', 'Approved', 'Rejected'] as const).map((st) => (
                     <button
-                      key={st}
-                      disabled={statusUpdateLoading}
-                      onClick={() => handleUpdateStatus(selectedApplication.id, st)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold border transition-all ${
-                        selectedApplication.status === st
-                          ? 'bg-[#D4AF37] text-black border-[#D4AF37] shadow-lg'
-                          : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
-                      }`}
+                      type="button"
+                      onClick={() => setFullPhotoUrl(selectedApplication.profilePhoto || '/Default.jpg')}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37]/50 text-[#F5D77A] text-xs font-bold hover:bg-[#D4AF37]/30 transition-all cursor-pointer shadow-md"
                     >
-                      {st}
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>View Profile Photo</span>
                     </button>
-                  ))}
+                  </div>
                 </div>
               </div>
 
@@ -824,6 +818,42 @@ export default function AdminTalentApplications({
                   <span>Confirm Delete</span>
                 </button>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* =========================================================
+          FULL PROFILE PHOTO LIGHTBOX
+      ========================================================= */}
+      <AnimatePresence>
+        {fullPhotoUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl"
+            onClick={() => setFullPhotoUrl(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl border border-white/20 bg-[#090d1f] p-3 shadow-2xl flex flex-col items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setFullPhotoUrl(null)}
+                className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-black/70 text-white hover:bg-white/20 transition-all border border-white/15"
+                aria-label="Close photo"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <img
+                src={fullPhotoUrl}
+                alt="Full Profile Photo"
+                className="max-h-[82vh] max-w-full object-contain rounded-2xl shadow-xl"
+              />
             </motion.div>
           </motion.div>
         )}

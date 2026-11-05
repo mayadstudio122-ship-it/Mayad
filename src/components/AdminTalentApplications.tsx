@@ -32,11 +32,19 @@ import {
   LayoutGrid,
   List,
   Maximize2,
+  Download,
+  FileSpreadsheet,
+  ChevronDown,
 } from 'lucide-react';
 import {
   adminService,
   AdminTalentApplicationRecord,
 } from '@/services/adminService';
+import {
+  exportTalentToExcel,
+  exportTalentToPdf,
+  exportSingleArtistPdf,
+} from '@/utils/talentExport';
 
 interface AdminTalentApplicationsProps {
   showToast?: (text: string, type?: 'success' | 'error') => void;
@@ -93,6 +101,62 @@ export default function AdminTalentApplications({
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [statusUpdateLoading, setStatusUpdateLoading] = useState(false);
   const [fullPhotoUrl, setFullPhotoUrl] = useState<string | null>(null);
+
+  // Export State & Click Outside
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [exportLoading, setExportLoading] = useState<'excel' | 'pdf' | null>(null);
+  const exportDropdownRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (exportDropdownRef.current && !exportDropdownRef.current.contains(event.target as Node)) {
+        setShowExportMenu(false);
+      }
+    };
+    if (showExportMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showExportMenu]);
+
+  // Handle Export (Excel or PDF)
+  const handleExport = async (format: 'excel' | 'pdf') => {
+    try {
+      setShowExportMenu(false);
+      setExportLoading(format);
+      notify(`Preparing ${format === 'excel' ? 'Excel Spreadsheet (.xlsx)' : 'PDF Report (.pdf)'} with all artist details...`);
+
+      const res = await adminService.getTalentApplications({
+        page: 1,
+        limit: 10000,
+        search: searchQuery,
+        role: roleFilter,
+        experienceLevel: experienceFilter,
+        status: statusFilter,
+      });
+
+      if (!res.success || !res.applications || res.applications.length === 0) {
+        notify('No artist registration records found to download.', 'error');
+        return;
+      }
+
+      if (format === 'excel') {
+        exportTalentToExcel(res.applications, 'MAYAD_Artist_Registrations');
+        notify(`Exported ${res.applications.length} artist registration(s) to Excel!`);
+      } else {
+        const filterName = roleFilter !== 'All' ? `Role: ${roleFilter}` : 'All Categories';
+        exportTalentToPdf(res.applications, filterName);
+        notify(`Exported ${res.applications.length} artist registration(s) to PDF!`);
+      }
+    } catch (err: any) {
+      console.error('Export error:', err);
+      notify(err?.message || `Failed to export as ${format}`, 'error');
+    } finally {
+      setExportLoading(null);
+    }
+  };
 
   const notify = (text: string, type: 'success' | 'error' = 'success') => {
     if (showToast) showToast(text, type);
@@ -311,6 +375,73 @@ export default function AdminTalentApplications({
           </button>
 
 
+
+          {/* Export / Download Dropdown */}
+          <div ref={exportDropdownRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setShowExportMenu((prev) => !prev)}
+              disabled={exportLoading !== null}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-yellow-500/25 to-amber-500/20 hover:from-amber-500/30 hover:to-yellow-500/35 border border-amber-400/40 text-amber-300 hover:text-amber-200 text-xs font-bold transition-all shadow-[0_0_15px_rgba(245,197,24,0.15)] disabled:opacity-50 cursor-pointer"
+              title="Download Artist Registration Records"
+            >
+              {exportLoading ? (
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" />
+              ) : (
+                <Download className="w-3.5 h-3.5 text-amber-400" />
+              )}
+              <span>{exportLoading ? `Exporting ${exportLoading.toUpperCase()}...` : 'Download'}</span>
+              <ChevronDown className={`w-3 h-3 text-amber-400 transition-transform ${showExportMenu ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Menu */}
+            <AnimatePresence>
+              {showExportMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#0b0e1b] border border-amber-500/30 p-2 shadow-[0_15px_40px_rgba(0,0,0,0.85)] z-40 backdrop-blur-xl"
+                >
+                  <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-white/10 flex items-center justify-between">
+                    <span>Export Format</span>
+                    <span className="text-[10px] text-amber-400 font-semibold">{applications.length} on page</span>
+                  </div>
+
+                  {/* Excel Option */}
+                  <button
+                    type="button"
+                    onClick={() => handleExport('excel')}
+                    className="w-full mt-1.5 flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-emerald-500/15 text-slate-200 hover:text-emerald-300 text-xs font-semibold transition-all text-left group cursor-pointer"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
+                      <FileSpreadsheet className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-bold text-slate-100 group-hover:text-emerald-300">Excel (.xlsx)</div>
+                      <div className="text-[10px] text-slate-400">All columns, bios & URLs</div>
+                    </div>
+                  </button>
+
+                  {/* PDF Option */}
+                  <button
+                    type="button"
+                    onClick={() => handleExport('pdf')}
+                    className="w-full mt-1 flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/15 text-slate-200 hover:text-rose-300 text-xs font-semibold transition-all text-left group cursor-pointer"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0 group-hover:scale-105 transition-transform">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-bold text-slate-100 group-hover:text-rose-300">PDF Document (.pdf)</div>
+                      <div className="text-[10px] text-slate-400">Formatted landscape report</div>
+                    </div>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Refresh Button */}
           <button
@@ -631,6 +762,23 @@ export default function AdminTalentApplications({
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>View Profile Photo</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        try {
+                          exportSingleArtistPdf(selectedApplication);
+                          notify(`Dossier PDF for ${selectedApplication.fullName} downloaded!`);
+                        } catch (err: any) {
+                          notify(err?.message || 'Failed to download PDF dossier', 'error');
+                        }
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold hover:bg-amber-500/30 transition-all cursor-pointer shadow-md"
+                      title="Download complete applicant dossier as PDF"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download PDF Dossier</span>
                     </button>
                   </div>
                 </div>

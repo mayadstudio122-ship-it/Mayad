@@ -203,7 +203,7 @@ export default function AdminAuthPage() {
     try {
       const response = await adminService.login({
         email: email.trim().toLowerCase(),
-        password,
+        password: password.trim(),
       });
 
       if (response.success) {

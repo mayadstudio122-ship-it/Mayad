@@ -1,114 +1,67 @@
-import type { Metadata } from 'next';
+
+import type { Metadata } from "next";
+
+const SITE_URL = "https://www.mayadstudio.com";
 
 export const metadata: Metadata = {
-  title: 'DP Singh Basni | Founder & CEO of MAYAD',
+  title: "DP Singh Basni | Founder & CEO of MAYAD",
 
   description:
-    'Learn about DP Singh Basni, Founder & CEO of MAYAD, Rajasthani filmmaker, director, writer, actor and singer. Explore his films, music, creative work and vision for Rajasthani cinema and culture.',
-
-  keywords: [
-    'DP Singh Basni',
-    'DP Singh Basni Founder',
-    'DP Singh Basni CEO',
-    'DP Singh Basni MAYAD',
-    'DP Singh Basni filmmaker',
-    'DP Singh Basni director',
-    'DP Singh Basni writer',
-    'DP Singh Basni actor',
-    'DP Singh Basni singer',
-    'MAYAD Founder',
-    'MAYAD CEO',
-    'MAYAD Studios',
-    'MAYAD OTT',
-    'Rajasthani filmmaker',
-    'Rajasthani director',
-    'Rajasthani cinema',
-    'Rajasthani movies',
-    'Rajasthani films',
-    'Rajasthani music',
-    'Rajasthan cinema',
-    'Rajasthan culture',
-    'Vadlya Hindva',
-    'Sanwariya Seth',
-    'Maa Padmavati',
-    'Maa Hadi Rani',
-  ],
+    "Discover DP Singh Basni, Founder and CEO of MAYAD, and explore his creative journey in Rajasthani filmmaking, direction, writing, acting, music and culture.",
 
   authors: [
     {
-      name: 'DP Singh Basni',
-      url: 'https://mayad.in/founder',
+      name: "DP Singh Basni",
+      url: `${SITE_URL}/founder`,
     },
   ],
 
-  creator: 'MAYAD',
-  publisher: 'MAYAD',
-
-  applicationName: 'MAYAD OTT',
-
-  category: 'Entertainment',
+  creator: "MAYAD",
+  publisher: "MAYAD",
+  applicationName: "MAYAD OTT",
 
   alternates: {
-    canonical: 'https://mayad.in/founder',
+    canonical: `${SITE_URL}/founder`,
   },
 
-  // ============================================================
-  // OPEN GRAPH
-  // ============================================================
-
   openGraph: {
-    type: 'profile',
+    type: "profile",
+    locale: "en_IN",
+    url: `${SITE_URL}/founder`,
+    siteName: "MAYAD",
 
-    locale: 'en_IN',
-
-    url: 'https://mayad.in/founder',
-
-    siteName: 'MAYAD OTT',
-
-    title: 'DP Singh Basni | Founder & CEO of MAYAD',
+    title: "DP Singh Basni | Founder & CEO of MAYAD",
 
     description:
-      'Meet DP Singh Basni, Founder & CEO of MAYAD and a Rajasthani filmmaker, director, writer, actor and singer working to build a digital ecosystem for Rajasthani cinema, music and culture.',
+      "Meet DP Singh Basni, Founder and CEO of MAYAD, working to promote Rajasthani cinema, music, storytelling and culture.",
 
     images: [
       {
-        url: '/ceo.jpg',
+        url: `${SITE_URL}/ceo.jpg`,
         width: 1200,
         height: 1500,
-        alt: 'DP Singh Basni — Founder & CEO of MAYAD',
+        alt: "DP Singh Basni - Founder and CEO of MAYAD",
       },
     ],
   },
 
-  // ============================================================
-  // TWITTER / X
-  // ============================================================
-
   twitter: {
-    card: 'summary_large_image',
-
-    title: 'DP Singh Basni | Founder & CEO of MAYAD',
-
+    card: "summary_large_image",
+    title: "DP Singh Basni | Founder & CEO of MAYAD",
     description:
-      'DP Singh Basni is the Founder & CEO of MAYAD and a Rajasthani filmmaker, director, writer, actor and singer.',
-
-    images: ['/ceo.jpg'],
+      "Explore the journey and creative vision of DP Singh Basni, Founder and CEO of MAYAD.",
+    images: [`${SITE_URL}/ceo.jpg`],
   },
-
-  // ============================================================
-  // SEARCH ENGINE
-  // ============================================================
 
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 };

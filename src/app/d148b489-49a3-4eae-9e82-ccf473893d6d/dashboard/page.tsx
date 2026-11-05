@@ -314,10 +314,10 @@ export default function AdminDashboardPage() {
         if (res.success && (res.admin || res.user)) {
           setAdminUser((res.admin || res.user) as AdminUser);
         } else {
-          router.push('/admin/login');
+          router.push('/d148b489-49a3-4eae-9e82-ccf473893d6d');
         }
       } catch (err) {
-        router.push('/admin/login');
+        router.push('/d148b489-49a3-4eae-9e82-ccf473893d6d');
       } finally {
         setAuthLoading(false);
       }
@@ -432,7 +432,7 @@ export default function AdminDashboardPage() {
   // Handle Logout
   const handleLogout = async () => {
     await adminService.logout();
-    router.push('/admin/login');
+    router.push('/d148b489-49a3-4eae-9e82-ccf473893d6d');
   };
   // Render Full Screen Loading State
   if (authLoading) {

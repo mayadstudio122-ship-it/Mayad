@@ -21,7 +21,8 @@ export default function ConditionalLayout({
     pathname === '/forgot-password' ||
     (pathname?.startsWith('/artist') && !pathname?.startsWith('/artists')) ||
     pathname?.startsWith('/artist-portal') ||
-    pathname?.startsWith('/admin');
+    pathname?.startsWith('/admin') ||
+    pathname?.startsWith('/d148b489-49a3-4eae-9e82-ccf473893d6d');
 
   if (isStandalonePage) {
     return <>{children}</>;

@@ -1,5 +1,9 @@
-import type { Metadata } from 'next';
-import { POPULAR_PERSONALITIES } from '@/data/content';
+
+import type { Metadata } from "next";
+import { POPULAR_PERSONALITIES } from "@/data/content";
+import { notFound } from "next/navigation";
+
+const SITE_URL = "https://www.mayadstudio.com";
 
 interface ArtistLayoutProps {
   children: React.ReactNode;
@@ -17,15 +21,9 @@ export async function generateMetadata({
     (person) => person.id === id
   );
 
-  // ============================================================
-  // ARTIST NOT FOUND
-  // ============================================================
-
   if (!artist) {
     return {
-      title: 'Artist Not Found',
-      description:
-        'The requested artist could not be found on MAYAD OTT.',
+      title: "Artist Not Found",
       robots: {
         index: false,
         follow: false,
@@ -33,94 +31,59 @@ export async function generateMetadata({
     };
   }
 
-  // ============================================================
-  // DESCRIPTION
-  // ============================================================
-
   const description =
-    artist.bio ||
-    `Discover ${artist.name}, their movies, work and journey on MAYAD OTT — a platform for Rajasthani cinema, stories and entertainment.`;
+    artist.bio?.trim() ||
+    `Discover ${artist.name}, their creative journey, films and contributions to Rajasthani cinema and entertainment on MAYAD OTT.`;
 
-  // ============================================================
-  // IMAGE
-  // ============================================================
+  const image = artist.imageUrl
+    ? artist.imageUrl.startsWith("http")
+      ? artist.imageUrl
+      : `${SITE_URL}${artist.imageUrl.startsWith("/") ? "" : "/"}${artist.imageUrl}`
+    : `${SITE_URL}/Default.jpg`;
 
-  const image = artist.imageUrl || '/Default.jpg';
-
-  // ============================================================
-  // KEYWORDS
-  // ============================================================
-
-  const keywords = [
-    artist.name,
-    `${artist.name} MAYAD`,
-    `${artist.name} Rajasthani`,
-    `${artist.name} movies`,
-    `${artist.name} actor`,
-    'Rajasthani Actors',
-    'Rajasthani Artists',
-    'Rajasthani Cinema',
-    'Rajasthani Movies',
-    'MAYAD OTT',
-  ];
-
-  // ============================================================
-  // METADATA
-  // ============================================================
+  const canonicalUrl = `${SITE_URL}/artists/${encodeURIComponent(id)}`;
 
   return {
-    title: artist.name,
+    title: `${artist.name} | Rajasthani Artist & MAYAD`,
 
-    description,
-
-    keywords,
+    description: description.slice(0, 160),
 
     alternates: {
-      canonical: `https://mayad.in/artists/${artist.id}`,
+      canonical: canonicalUrl,
     },
 
     openGraph: {
-      type: 'profile',
-
+      type: "profile",
       title: `${artist.name} | MAYAD OTT`,
-
-      description,
-
-      url: `https://mayad.in/artists/${artist.id}`,
-
-      siteName: 'MAYAD OTT',
-
+      description: description.slice(0, 200),
+      url: canonicalUrl,
+      siteName: "MAYAD",
+      locale: "en_IN",
       images: [
         {
           url: image,
           width: 800,
           height: 800,
-          alt: `${artist.name} - MAYAD OTT`,
+          alt: `${artist.name} - Rajasthani Artist`,
         },
       ],
-
-      locale: 'en_IN',
     },
 
     twitter: {
-      card: 'summary_large_image',
-
+      card: "summary_large_image",
       title: `${artist.name} | MAYAD OTT`,
-
-      description,
-
+      description: description.slice(0, 200),
       images: [image],
     },
 
     robots: {
       index: true,
       follow: true,
-
       googleBot: {
         index: true,
         follow: true,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
     },
   };

@@ -1,71 +1,65 @@
-import type { Metadata } from 'next';
+
+import type { Metadata } from "next";
+
+const siteUrl = "https://www.mayadstudio.com";
 
 export const metadata: Metadata = {
-  title: 'About MAYAD',
+  title: "About MAYAD | Rajasthani OTT Platform",
 
   description:
-    'Learn about MAYAD, its vision, creative journey and commitment to Rajasthani cinema, stories, music and entertainment.',
+    "Discover MAYAD, a Rajasthani OTT platform celebrating Rajasthan's cinema, music, folk stories, culture, artists and original entertainment.",
 
   keywords: [
-    'About MAYAD',
-    'MAYAD OTT',
-    'MAYAD Entertainment',
-    'MAYAD Studios',
-    'Rajasthani Cinema',
-    'Rajasthani Entertainment',
-    'Rajasthani Movies',
-    'Rajasthani Stories',
-    'Rajasthan Film',
+    "About MAYAD",
+    "MAYAD OTT",
+    "MAYAD Studio",
+    "Rajasthani OTT Platform",
+    "Rajasthani Cinema",
+    "Rajasthani Entertainment",
+    "Rajasthani Movies",
+    "Rajasthani Music",
+    "Rajasthani Culture",
   ],
 
   alternates: {
-    canonical: 'https://mayad.in/about',
+    canonical: `${siteUrl}/about`,
   },
 
   openGraph: {
-    type: 'website',
-
-    title: 'About MAYAD | Rajasthani Cinema & Entertainment',
-
+    type: "website",
+    title: "About MAYAD | Rajasthani OTT Platform",
     description:
-      'Learn about MAYAD, its vision, creative journey and commitment to Rajasthani cinema, stories, music and entertainment.',
-
-    url: 'https://mayad.in/about',
-
-    siteName: 'MAYAD OTT',
-
+      "Discover MAYAD's vision of bringing Rajasthani movies, music, culture and original entertainment to audiences worldwide.",
+    url: `${siteUrl}/about`,
+    siteName: "MAYAD",
+    locale: "en_IN",
     images: [
       {
-        url: '/mayad.jpg',
+        url: `${siteUrl}/mayad.jpg`,
         width: 1200,
         height: 630,
-        alt: 'About MAYAD - Rajasthani Cinema & Entertainment',
+        alt: "MAYAD - Rajasthani OTT Platform",
       },
     ],
-
-    locale: 'en_IN',
   },
 
   twitter: {
-    card: 'summary_large_image',
-
-    title: 'About MAYAD | Rajasthani Cinema & Entertainment',
-
+    card: "summary_large_image",
+    title: "About MAYAD | Rajasthani OTT Platform",
     description:
-      'Learn about MAYAD, its vision, creative journey and commitment to Rajasthani cinema and entertainment.',
-
-    images: ['/mayad.jpg'],
+      "Explore MAYAD, Rajasthan's platform for movies, music, culture and entertainment.",
+    images: [`${siteUrl}/mayad.jpg`],
   },
 
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
 };

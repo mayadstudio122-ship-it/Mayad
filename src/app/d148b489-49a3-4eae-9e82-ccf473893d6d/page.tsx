@@ -158,7 +158,7 @@ export default function AdminAuthPage() {
       try {
         const res = await adminService.getMe();
         if (res.success && res.admin) {
-          router.push('/admin/dashboard');
+          router.push('/d148b489-49a3-4eae-9e82-ccf473893d6d/dashboard');
         }
       } catch (err) {
         // Not logged in
@@ -207,6 +207,14 @@ export default function AdminAuthPage() {
       });
 
       if (response.success) {
+        if (response.token || response.admin) {
+          setSuccessMsg('Authentication successful! Redirecting to Executive Dashboard...');
+          setTimeout(() => {
+            router.push('/d148b489-49a3-4eae-9e82-ccf473893d6d/dashboard');
+          }, 600);
+          return;
+        }
+
         setSuccessMsg(response.message || `OTP sent to ${email.trim().toLowerCase()}. Please check your email.`);
         setStep('OTP');
         setResendTimer(60);
@@ -241,7 +249,7 @@ export default function AdminAuthPage() {
       if (response.success) {
         setSuccessMsg('Authentication successful! Redirecting to Executive Dashboard...');
         setTimeout(() => {
-          router.push('/admin/dashboard');
+          router.push('/d148b489-49a3-4eae-9e82-ccf473893d6d/dashboard');
         }, 1000);
       }
     } catch (err: any) {
@@ -385,7 +393,7 @@ export default function AdminAuthPage() {
           </h1>
           <p className="text-slate-400 text-xs sm:text-sm">
             {step === 'CREDENTIALS'
-              ? 'Enter your admin credentials to initiate login.'
+              ? 'Enter your admin credentials to log in.'
               : 'Enter the 6-digit OTP code dispatched to your email.'}
           </p>
         </div>
@@ -498,11 +506,11 @@ export default function AdminAuthPage() {
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                    <span>Verifying & Sending OTP...</span>
+                    <span>Signing in...</span>
                   </>
                 ) : (
                   <>
-                    <span>Continue to Security OTP</span>
+                    <span>Log In to Dashboard</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}

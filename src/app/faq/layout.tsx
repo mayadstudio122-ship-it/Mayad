@@ -1,50 +1,53 @@
-import type { Metadata } from 'next';
+
+import type { Metadata } from "next";
+
+const SITE_URL = "https://www.mayadstudio.com";
 
 export const metadata: Metadata = {
-    title: 'Frequently Asked Questions | MAYAD',
+    title: "Frequently Asked Questions | MAYAD OTT",
+
     description:
-        'Find answers to frequently asked questions about MAYAD, our media platform, services, artist network, registration process, and how to contact the MAYAD team.',
-    keywords: [
-        'MAYAD',
-        'MAYAD FAQ',
-        'MAYAD frequently asked questions',
-        'MAYAD Rajasthan',
-        'MAYAD media platform',
-        'MAYAD services',
-        'MAYAD artists',
-        'MAYAD registration',
-        'MAYAD contact',
-        'Rajasthan media platform',
-    ],
+        "Find answers to common questions about MAYAD OTT, Rajasthani movies, web series, music, artists, registration, subscriptions and platform services.",
+
     alternates: {
-        canonical: 'https://mayadstudio.com/faq',
+        canonical: `${SITE_URL}/faq`,
     },
+
     openGraph: {
-        title: 'Frequently Asked Questions | MAYAD',
+        type: "website",
+        title: "Frequently Asked Questions | MAYAD OTT",
         description:
-            'Get answers to common questions about MAYAD, our services, media platform, artist network, registration and more.',
-        url: 'https://mayadstudio.com/faq',
-        siteName: 'MAYAD',
-        type: 'website',
+            "Get answers about watching Rajasthani movies, music, web series, artists and using the MAYAD OTT platform.",
+        url: `${SITE_URL}/faq`,
+        siteName: "MAYAD",
+        locale: "en_IN",
         images: [
             {
-                url: 'https://mayadstudio.com/og-image.jpg',
+                url: `${SITE_URL}/mayad.jpg`,
                 width: 1200,
                 height: 630,
-                alt: 'MAYAD - Frequently Asked Questions',
+                alt: "MAYAD OTT - Frequently Asked Questions",
             },
         ],
     },
+
     twitter: {
-        card: 'summary_large_image',
-        title: 'Frequently Asked Questions | MAYAD',
+        card: "summary_large_image",
+        title: "Frequently Asked Questions | MAYAD OTT",
         description:
-            'Get answers to common questions about MAYAD, our services, media platform, artist network, registration and more.',
-        images: ['https://mayadstudio.com/og-image.jpg'],
+            "Find answers about MAYAD OTT, Rajasthani entertainment and platform services.",
+        images: [`${SITE_URL}/mayad.jpg`],
     },
+
     robots: {
         index: true,
         follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
     },
 };
 

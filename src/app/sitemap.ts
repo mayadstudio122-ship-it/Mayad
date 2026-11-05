@@ -1,73 +1,57 @@
-import type { MetadataRoute } from 'next';
 
-import { MOVIES_LIST } from '@/data/movie';
-import { POPULAR_PERSONALITIES } from '@/data/content';
+import type { MetadataRoute } from "next";
+
+import { MOVIES_LIST } from "@/data/movie";
+import { POPULAR_PERSONALITIES } from "@/data/content";
+
+const BASE_URL = "https://www.mayadstudio.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://mayad.in';
-
-  // ============================================================
-  // STATIC PAGES
-  // ============================================================
-
+  // Public static pages
   const staticPages = [
-    '',
-    '/about',
-    '/movies',
-    '/tv-shows',
-    '/artists',
-    '/culture',
-    '/gallery',
-    '/blogs',
+    "",
+    "/about",
+    "/movies",
+    "/series",
+    "/artists",
+    "/blogs",
+    "/culture",
+    "/gallery",
+    "/contact",
+    "/faq",
+    "/founder",
   ];
-
-  // ============================================================
-  // STATIC PAGE SITEMAP
-  // ============================================================
 
   const staticSitemap: MetadataRoute.Sitemap =
     staticPages.map((page) => ({
-      url: `${baseUrl}${page}`,
-      lastModified: new Date(),
+      url: `${BASE_URL}${page}`,
       changeFrequency:
-        page === '' || page === '/movies'
-          ? 'weekly'
-          : 'monthly',
+        page === "" || page === "/movies" || page === "/series"
+          ? "weekly"
+          : "monthly",
       priority:
-        page === ''
+        page === ""
           ? 1
-          : page === '/movies'
+          : page === "/movies" || page === "/series"
             ? 0.9
-            : 0.6,
+            : 0.7,
     }));
 
-  // ============================================================
-  // MOVIE PAGES
-  // ============================================================
-
+  // Individual movie pages
   const moviePages: MetadataRoute.Sitemap =
     MOVIES_LIST.map((movie) => ({
-      url: `${baseUrl}/movies/${movie.slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
+      url: `${BASE_URL}/movies/${movie.slug}`,
+      changeFrequency: "monthly",
       priority: 0.8,
     }));
 
-  // ============================================================
-  // ARTIST PAGES
-  // ============================================================
-
+  // Individual artist pages
   const artistPages: MetadataRoute.Sitemap =
     POPULAR_PERSONALITIES.map((artist) => ({
-      url: `${baseUrl}/artists/${artist.id}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
+      url: `${BASE_URL}/artists/${artist.id}`,
+      changeFrequency: "monthly",
       priority: 0.7,
     }));
-
-  // ============================================================
-  // FINAL SITEMAP
-  // ============================================================
 
   return [
     ...staticSitemap,

@@ -1,71 +1,52 @@
-import type { Metadata } from 'next';
+
+import type { Metadata } from "next";
+
+const SITE_URL = "https://www.mayadstudio.com";
 
 export const metadata: Metadata = {
-  title: 'MAYAD Photo Gallery',
+  title: "MAYAD Photo Gallery | Rajasthani Artists & Entertainment",
 
   description:
-    'Explore the MAYAD photo gallery featuring highlights, special moments, artists and visual stories from MAYAD and Rajasthan.',
-
-  keywords: [
-    'MAYAD Gallery',
-    'MAYAD Photo Gallery',
-    'MAYAD Photos',
-    'MAYAD Images',
-    'Rajasthan Photos',
-    'Rajasthani Artists',
-    'Rajasthani Cinema',
-    'MAYAD OTT',
-    'MAYAD Entertainment',
-  ],
+    "Explore the MAYAD photo gallery featuring Rajasthani artists, cinema events, entertainment highlights, special moments and visual stories from Rajasthan.",
 
   alternates: {
-    canonical: 'https://mayad.in/gallery',
+    canonical: `${SITE_URL}/gallery`,
   },
 
   openGraph: {
-    type: 'website',
-
-    title: 'MAYAD Photo Gallery | MAYAD OTT',
-
+    type: "website",
+    title: "MAYAD Photo Gallery | Rajasthani Artists & Entertainment",
     description:
-      'Explore MAYAD highlights, special moments, artists and visual stories from MAYAD and Rajasthan.',
-
-    url: 'https://mayad.in/gallery',
-
-    siteName: 'MAYAD OTT',
-
+      "Discover MAYAD's photo gallery featuring Rajasthani artists, cinema, cultural events and entertainment highlights.",
+    url: `${SITE_URL}/gallery`,
+    siteName: "MAYAD",
+    locale: "en_IN",
     images: [
       {
-        url: '/mayad.jpg',
+        url: `${SITE_URL}/mayad.jpg`,
         width: 1200,
         height: 630,
-        alt: 'MAYAD Photo Gallery',
+        alt: "MAYAD Photo Gallery - Rajasthan",
       },
     ],
-
-    locale: 'en_IN',
   },
 
   twitter: {
-    card: 'summary_large_image',
-
-    title: 'MAYAD Photo Gallery | MAYAD OTT',
-
+    card: "summary_large_image",
+    title: "MAYAD Photo Gallery | MAYAD",
     description:
-      'Explore MAYAD highlights, special moments, artists and visual stories from MAYAD and Rajasthan.',
-
-    images: ['/mayad.jpg'],
+      "Explore Rajasthani artists, events, cinema and entertainment highlights in the MAYAD photo gallery.",
+    images: [`${SITE_URL}/mayad.jpg`],
   },
 
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 };

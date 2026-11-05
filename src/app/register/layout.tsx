@@ -1,61 +1,51 @@
-import type { Metadata } from 'next';
+
+import type { Metadata } from "next";
+
+const SITE_URL = "https://www.mayadstudio.com";
 
 export const metadata: Metadata = {
-    title: 'Talent Registration | MAYAD Production House',
+    title: "Talent Registration | MAYAD Production House",
+
     description:
-        'Register with MAYAD Production House and join our talent network. Apply as an actor, actress, director, writer, cinematographer, editor, singer, dancer, anchor, host, or sound designer.',
-    keywords: [
-        'MAYAD',
-        'MAYAD talent registration',
-        'MAYAD registration',
-        'MAYAD talent network',
-        'MAYAD production house',
-        'MAYAD casting',
-        'MAYAD actors registration',
-        'MAYAD actress registration',
-        'MAYAD director registration',
-        'MAYAD writer registration',
-        'MAYAD singer registration',
-        'MAYAD dancer registration',
-        'MAYAD cinematographer',
-        'MAYAD editor',
-        'Rajasthan casting',
-        'Rajasthan talent registration',
-        'Rajasthan production house',
-    ],
+        "Register with MAYAD Production House to showcase your talent in acting, direction, writing, singing, dancing, cinematography and other creative fields.",
 
     alternates: {
-        canonical: 'https://mayadstudio.com/register',
+        canonical: `${SITE_URL}/register`,
     },
 
     openGraph: {
-        title: 'Talent Registration | MAYAD Production House',
+        type: "website",
+        title: "Talent Registration | MAYAD",
         description:
-            'Join the MAYAD talent network. Register your profile for opportunities in acting, direction, writing, cinematography, editing, singing, dancing, anchoring and more.',
-        url: 'https://mayadstudio.com/register',
-        siteName: 'MAYAD',
-        type: 'website',
+            "Join the MAYAD talent network. Submit your creative profile for acting, direction, writing, singing, dancing and production opportunities.",
+        url: `${SITE_URL}/register`,
+        siteName: "MAYAD",
+        locale: "en_IN",
         images: [
             {
-                url: 'https://mayadstudio.com/og-image.jpg',
+                url: `${SITE_URL}/mayad.jpg`,
                 width: 1200,
                 height: 630,
-                alt: 'MAYAD Talent Registration',
+                alt: "MAYAD Production House Talent Registration",
             },
         ],
     },
 
     twitter: {
-        card: 'summary_large_image',
-        title: 'Talent Registration | MAYAD Production House',
+        card: "summary_large_image",
+        title: "Talent Registration | MAYAD",
         description:
-            'Join the MAYAD talent network and register your creative profile for future opportunities.',
-        images: ['https://mayadstudio.com/og-image.jpg'],
+            "Showcase your creative talent and join the MAYAD talent network.",
+        images: [`${SITE_URL}/mayad.jpg`],
     },
 
     robots: {
-        index: true,
+        index: false,
         follow: true,
+        googleBot: {
+            index: false,
+            follow: true,
+        },
     },
 };
 

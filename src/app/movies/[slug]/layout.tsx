@@ -1,5 +1,8 @@
-import type { Metadata } from 'next';
-import { MOVIES_LIST } from '@/data/movie';
+
+import type { Metadata } from "next";
+import { MOVIES_LIST } from "@/data/movie";
+
+const SITE_URL = "https://www.mayadstudio.com";
 
 interface MovieLayoutProps {
   children: React.ReactNode;
@@ -17,15 +20,9 @@ export async function generateMetadata({
     (item) => item.slug === slug
   );
 
-  // ============================================================
-  // MOVIE NOT FOUND
-  // ============================================================
-
   if (!movie) {
     return {
-      title: 'Movie Not Found',
-      description:
-        'The requested movie could not be found on MAYAD OTT.',
+      title: "Movie Not Found",
       robots: {
         index: false,
         follow: false,
@@ -33,98 +30,61 @@ export async function generateMetadata({
     };
   }
 
-  // ============================================================
-  // MOVIE DATA
-  // ============================================================
-
   const description =
-    movie.description ||
-    `Watch ${movie.title} on MAYAD OTT. Discover Rajasthani cinema, stories and entertainment from Rajasthan.`;
+    movie.description?.trim() ||
+    `Discover ${movie.title}, a Rajasthani film featured on MAYAD OTT. Explore regional cinema, stories and entertainment from Rajasthan.`;
 
-  const poster = movie.posterUrl || '/mayad.jpg';
+  const poster = movie.posterUrl
+    ? movie.posterUrl.startsWith("http")
+      ? movie.posterUrl
+      : `${SITE_URL}${movie.posterUrl.startsWith("/") ? "" : "/"}${movie.posterUrl}`
+    : `${SITE_URL}/mayad.jpg`;
 
-  const keywords = [
-    movie.title,
-    `${movie.title} MAYAD`,
-    `${movie.title} movie`,
-    `${movie.title} Rajasthani movie`,
-    'Rajasthani Movies',
-    'Rajasthani Cinema',
-    'Rajasthani OTT',
-    'MAYAD OTT',
-    'Rajasthan Entertainment',
-  ];
-
-  // ============================================================
-  // METADATA
-  // ============================================================
+  const canonicalUrl = `${SITE_URL}/movies/${encodeURIComponent(movie.slug)}`;
 
   return {
-    title: movie.title,
+    title: `${movie.title} | Watch on MAYAD OTT`,
 
-    description,
-
-    keywords,
+    description: description.slice(0, 160),
 
     alternates: {
-      canonical: `https://mayad.in/movies/${movie.slug}`,
+      canonical: canonicalUrl,
     },
 
     openGraph: {
-      type: 'video.movie',
-
+      type: "video.movie",
       title: `${movie.title} | MAYAD OTT`,
-
-      description,
-
-      url: `https://mayad.in/movies/${movie.slug}`,
-
-      siteName: 'MAYAD OTT',
+      description: description.slice(0, 200),
+      url: canonicalUrl,
+      siteName: "MAYAD",
+      locale: "en_IN",
 
       images: [
         {
           url: poster,
           width: 1200,
           height: 630,
-          alt: `${movie.title} - MAYAD OTT`,
+          alt: `${movie.title} - Rajasthani Movie on MAYAD`,
         },
       ],
-
-      locale: 'en_IN',
-
-      ...(movie.year
-        ? {
-            releaseDate: String(movie.year),
-          }
-        : {}),
-
-      ...(movie.genre || movie.genres
-        ? {
-            tags: movie.genres || [movie.genre].filter(Boolean),
-          }
-        : {}),
     },
 
     twitter: {
-      card: 'summary_large_image',
-
+      card: "summary_large_image",
       title: `${movie.title} | MAYAD OTT`,
-
-      description,
-
+      description: description.slice(0, 200),
       images: [poster],
     },
 
     robots: {
       index: true,
       follow: true,
-
       googleBot: {
         index: true,
         follow: true,
-        'max-image-preview': 'large',
-        'max-video-preview': -1,
-        'max-snippet': -1,
+        "max-image-preview": "large",
+        "max-video-preview": -1,
+        "max-snippet": -1,
       },
     },
   };

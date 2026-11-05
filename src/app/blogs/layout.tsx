@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   ],
 
   alternates: {
-    canonical: 'https://mayad.in/blogs',
+    canonical: 'https://www.mayadstudio.com/blogs',
   },
 
   openGraph: {
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     description:
       'Read stories, insights, culture, cinema and entertainment articles from MAYAD and the world of Rajasthani storytelling.',
 
-    url: 'https://mayad.in/blogs',
+    url: 'https://www.mayadstudio.com/blogs',
 
     siteName: 'MAYAD OTT',
 

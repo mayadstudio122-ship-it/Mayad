@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     ],
 
     alternates: {
-        canonical: 'https://mayadstudio.com/contact',
+        canonical: 'https://www.mayadstudio.com/contact',
     },
 
     openGraph: {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
         type: 'website',
         images: [
             {
-                url: 'https://mayadstudio.com/og-image.jpg',
+                url: 'https://www.mayadstudio.com/og-image.jpg',
                 width: 1200,
                 height: 630,
                 alt: 'Contact MAYAD',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
         title: 'Contact MAYAD | Production, Casting & Business Inquiries',
         description:
             'Connect with MAYAD for movie production, casting, business partnerships, media inquiries and more.',
-        images: ['https://mayadstudio.com/og-image.jpg'],
+        images: ['https://www.mayadstudio.com/og-image.jpg'],
     },
 
     robots: {

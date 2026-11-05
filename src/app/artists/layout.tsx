@@ -1,55 +1,42 @@
-import type { Metadata } from 'next';
-import React from 'react';
+
+import type { Metadata } from "next";
+
+const SITE_URL = "https://www.mayadstudio.com";
 
 export const metadata: Metadata = {
-  title: 'Rajasthani Artists & Actors',
-  description:
-    'Explore Rajasthani actors, artists, singers and creative talents on MAYAD OTT. Discover their profiles, filmography, roles and contributions to Rajasthani cinema and entertainment.',
+  title: "Rajasthani Artists, Actors & Singers",
 
-  keywords: [
-    'Rajasthani Actors',
-    'Rajasthani Artists',
-    'Rajasthani Actors List',
-    'Rajasthani Singers',
-    'Rajasthani Film Actors',
-    'Rajasthani Cinema Artists',
-    'Rajasthani Celebrities',
-    'Rajasthan Artists',
-    'Rajasthani Entertainment',
-    'Rajasthani Movies Actors',
-    'MAYAD Artists',
-    'MAYAD Actors',
-    'MAYAD OTT',
-  ],
+  description:
+    "Discover Rajasthani actors, singers, filmmakers and artists on MAYAD OTT. Explore artist profiles, creative journeys, filmography and contributions to Rajasthani entertainment.",
 
   alternates: {
-    canonical: 'https://mayad.in/artists',
+    canonical: `${SITE_URL}/artists`,
   },
 
   openGraph: {
-    type: 'website',
-    title: 'Rajasthani Artists & Actors | MAYAD OTT',
+    type: "website",
+    title: "Rajasthani Artists, Actors & Singers | MAYAD",
     description:
-      'Discover Rajasthani actors, artists, singers and creative talents featured across MAYAD OTT and Rajasthani cinema.',
-    url: 'https://mayad.in/artists',
-    siteName: 'MAYAD OTT',
-    locale: 'en_IN',
+      "Explore profiles of Rajasthani actors, singers, filmmakers and creative talents featured on MAYAD OTT.",
+    url: `${SITE_URL}/artists`,
+    siteName: "MAYAD",
+    locale: "en_IN",
     images: [
       {
-        url: '/mayad.jpg',
+        url: `${SITE_URL}/mayad.jpg`,
         width: 1200,
         height: 630,
-        alt: 'MAYAD OTT — Rajasthani Artists & Actors',
+        alt: "Rajasthani Artists and Actors - MAYAD",
       },
     ],
   },
 
   twitter: {
-    card: 'summary_large_image',
-    title: 'Rajasthani Artists & Actors | MAYAD OTT',
+    card: "summary_large_image",
+    title: "Rajasthani Artists, Actors & Singers | MAYAD",
     description:
-      'Explore artists, actors and creative talents from the world of Rajasthani cinema on MAYAD OTT.',
-    images: ['/mayad.jpg'],
+      "Discover Rajasthani artists, actors, singers and creative talents on MAYAD OTT.",
+    images: [`${SITE_URL}/mayad.jpg`],
   },
 
   robots: {
@@ -58,9 +45,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-      'max-video-preview': -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
 };

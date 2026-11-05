@@ -1,59 +1,43 @@
-import type { Metadata } from 'next';
-import React from 'react';
+
+import type { Metadata } from "next";
+import React from "react";
+
+const SITE_URL = "https://www.mayadstudio.com";
 
 export const metadata: Metadata = {
-  title: 'Rajasthan Culture & Heritage',
-  description:
-    'Explore the rich culture and heritage of Rajasthan on MAYAD OTT — Rajasthani language, folk dances, folk music, historic forts, festivals, handicrafts, textiles and traditional cuisine.',
+  title: "Rajasthan Culture & Heritage",
 
-  keywords: [
-    'Rajasthan Culture',
-    'Rajasthan Heritage',
-    'Rajasthani Culture',
-    'Rajasthani Heritage',
-    'Rajasthani Folk Dance',
-    'Rajasthani Folk Music',
-    'Ghoomar',
-    'Kalbelia',
-    'Manganiyar Music',
-    'Rajasthan Forts',
-    'Rajasthan Festivals',
-    'Rajasthani Handicrafts',
-    'Rajasthani Cuisine',
-    'Rajasthani Language',
-    'Rajasthan Tourism',
-    'MAYAD Culture',
-    'MAYAD OTT',
-  ],
+  description:
+    "Explore Rajasthan's rich culture and heritage on MAYAD. Discover Rajasthani folk dances, music, festivals, historic forts, handicrafts and traditional cuisine.",
 
   alternates: {
-    canonical: 'https://mayad.in/culture',
+    canonical: `${SITE_URL}/culture`,
   },
 
   openGraph: {
-    type: 'website',
-    title: 'Rajasthan Culture & Heritage | MAYAD OTT',
+    type: "website",
+    title: "Rajasthan Culture & Heritage | MAYAD",
     description:
-      'Discover the authentic culture, heritage, folk traditions, historic forts, festivals, crafts and cuisine of Rajasthan on MAYAD OTT.',
-    url: 'https://mayad.in/culture',
-    siteName: 'MAYAD OTT',
-    locale: 'en_IN',
+      "Discover Rajasthani culture, folk traditions, historic forts, festivals, handicrafts and traditional cuisine on MAYAD.",
+    url: `${SITE_URL}/culture`,
+    siteName: "MAYAD",
+    locale: "en_IN",
     images: [
       {
-        url: '/mayad.jpg',
+        url: `${SITE_URL}/mayad.jpg`,
         width: 1200,
         height: 630,
-        alt: 'MAYAD OTT — Rajasthan Culture & Heritage',
+        alt: "MAYAD - Rajasthan Culture and Heritage",
       },
     ],
   },
 
   twitter: {
-    card: 'summary_large_image',
-    title: 'Rajasthan Culture & Heritage | MAYAD OTT',
+    card: "summary_large_image",
+    title: "Rajasthan Culture & Heritage | MAYAD",
     description:
-      'Explore Rajasthani culture, folk traditions, heritage, festivals, crafts and cuisine on MAYAD OTT.',
-    images: ['/mayad.jpg'],
+      "Explore Rajasthani culture, folk music, dance, festivals and heritage on MAYAD.",
+    images: [`${SITE_URL}/mayad.jpg`],
   },
 
   robots: {
@@ -62,9 +46,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-      'max-video-preview': -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
 };
